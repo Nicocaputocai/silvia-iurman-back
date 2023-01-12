@@ -1,0 +1,30 @@
+{
+  "name": "silvia-iurman-back",
+  "version": "1.0.0",
+  "description": "back end de pagina de Silvia Iurman",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nicocaputocai/silvia-iurman-back.git"
+  },
+  "author": "The Division Code",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nicocaputocai/silvia-iurman-back/issues"
+  },
+  "homepage": "https://github.com/Nicocaputocai/silvia-iurman-back#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.20"
+  }
+}
