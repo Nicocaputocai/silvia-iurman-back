@@ -10,16 +10,73 @@ module.exports = {
         .catch(err => res.status(500))
     },
     create:function(req,res){
-
+        const data = {
+            day: req.body.day,
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            img: (req.files[0])?req.files[0].filename: "",
+            modality: req.body.modality,
+            city: req.body.city,
+            important: req.body.important,
+            archived: req.body.archived
+        };
+        const newActiviy = new Activity(data);
+        newActiviy.save()
+        .then(activity => res.status(201).send({activity}))
+        .catch(err => res.status(500).send({err}));
     },
     show: function(req,res){
+        let idActivity = req.params._id;
+        Activity.findById(idActivity).exec((err, activity) =>{
+            if(err) return res.status(500).send({message: 'Error en el servidor'})
 
+            if(activity){
+                return res.status(200).send(activity)
+            }else{
+                return res.status(404).send({message:'Esta nota no existe'})
+            }
+        })
     },
     update: function(req,res){
+        let idActivity = req.params._id;
+        let image = req.files[0] ? req.files[0].filename : req.body.img;
+        const data ={
+            day: req.body.day,
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            img: image,
+            modality: req.body.modality,
+            city: req.body.city,
+            important: req.body.important,
+            archived: req.body.archived
+        };
 
+        Activity.findByIdAndUpdate(idActivity, data, {new:true},(err, activityUpdate) =>{
+            if(err){
+                console.log(err)
+                return res.status(500).send({message:'error en el servidor'})
+            }
+
+            if(activityUpdate){
+                return res.status(200).send({activity: activityUpdate})
+            }else{
+                return res.status(404).send({message: 'La actividad no existe'})
+            }
+        });
     },
     remove: function(req,res){
+        let idActivity = req.params._id
+        Activity.findByIdAndRemove(idActivity,(err, activityRemoved) =>{
+            if(err) return res.status(500).send({message:'Error en el servidor'})
 
+            if(activityRemoved){
+                return res.status(200).send({activity: activityRemoved})
+            }else{
+                return res.status(400).send({message:'No existe esta actividad'})
+            }
+        })
     },
     //middleware para buscar cursos
     find: function(req,res, next){ 
