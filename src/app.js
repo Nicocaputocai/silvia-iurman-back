@@ -11,9 +11,9 @@ const Courses = require('./routes/courses');
 const Purchases = require('./routes/purchases');
 
 App.use(bodyParser.json());
-App.use(bodyParser.urlencoded({extended:true}));
+App.use(bodyParser.urlencoded({extended:false}));
 App.use(express.static(__dirname + '/public'));
-App.use('/api/activies', Activities);
+App.use('/api/activities', Activities);
 App.use('/api/blog', Blog);
 App.use('/api/courses', Courses);
 App.use('/api/purchases', Purchases);
