@@ -19,7 +19,6 @@ module.exports = {
             modality: req.body.modality,
             city: req.body.city,
             important: req.body.important,
-            archived: req.body.archived
         };
         const newActiviy = new Activity(data);
         newActiviy.save()

@@ -34,7 +34,7 @@ module.exports = {
         };
         Course.findByIdAndUpdate(idCourse, data, {new:true},(err, courseUpdated) =>{
             if(err) return res.status(500).send({message:'Error en el servidor'})
-            if(courseUpdate){
+            if(courseUpdated){
                 return res.status(200).send({courseUpdated}) // si no funciona probar course: courseUpdated
             }else{
                 return res.status(404).send({message:'El curso no existe'})
