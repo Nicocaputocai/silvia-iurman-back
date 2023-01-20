@@ -5,7 +5,7 @@ const uploadImg = require('../middlewares/uploadImg');
 
 router.get('/', CoursesController.getAll);
 router.post('/create',uploadImg.any(), CoursesController.create);
-router.get('show/:_id', CoursesController.find, CoursesController.show);
+router.get('/show/:_id', CoursesController.find, CoursesController.show);
 router.put('/edit/:_id', uploadImg.any(), CoursesController.find, CoursesController.update);
 router.delete('/delete/:_id', CoursesController.find, CoursesController.remove)
 

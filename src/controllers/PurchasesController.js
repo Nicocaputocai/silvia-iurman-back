@@ -73,9 +73,9 @@ module.exports = {
         //middleware para buscar cursos
     find: function(req,res, next){ 
         Purchase.find({_id: req.params._id})
-        .then(purchases => {
-            if(!purchases.length) return next();
-            req.body.purchases = purchases;
+        .then(purchase => {
+            if(!purchase.length) return next();
+            req.body.purchase = purchase;
             return next()
         })
         .catch(err => {
