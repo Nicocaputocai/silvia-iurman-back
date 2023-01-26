@@ -12,8 +12,10 @@ module.exports = {
     create:function(req,res){
         const data= {
             name: req.body.name,
-            day: req.body.name,
-            price: req.body.price
+            day: req.body.day,
+            pricePesos: req.body.pricePesos,
+            priceAnticipedPesos:req.body.priceAnticipedPesos,
+            priceDolar:req.body.priceDolar
         };
         const newCourse = new Course(data);
         newCourse.save()
@@ -29,8 +31,10 @@ module.exports = {
     update: function(req,res){
         let idCourse = req.params._id;
         const data= {
-            day: req.body.name,
-            price: req.body.price
+            day: req.body.day,
+            pricePesos: req.body.pricePesos,
+            priceAnticipedPesos:req.body.priceAnticipedPesos,
+            priceDolar:req.body.priceDolar
         };
         Course.findByIdAndUpdate(idCourse, data, {new:true},(err, courseUpdated) =>{
             if(err) return res.status(500).send({message:'Error en el servidor'})

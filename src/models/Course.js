@@ -9,9 +9,19 @@ const CourseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    price:{
+    pricePesos:{
         type: Number,
         required: true
+    },
+    priceAnticipedPesos:{
+        type: Number,
+        required: false,
+        default:0
+    },
+    priceDolar:{
+        type: Number,
+        required: false,
+        default:0
     }
 },{
     timestamps: true
