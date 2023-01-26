@@ -9,8 +9,24 @@ const CourseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    price:{
+    pricePesos:{
         type: Number,
+        required: true
+    },
+    priceAnticipedPesos:{
+        type: Number,
+        required: true
+    },
+    priceDolar:{
+        type: Number,
+        required: true
+    },
+    linkMP:{
+        type: String,
+        required: true
+    },
+    linkPP:{
+        type: String,
         required: true
     }
 },{

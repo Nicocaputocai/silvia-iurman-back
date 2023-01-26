@@ -27,7 +27,7 @@ module.exports = {
             if(err) return res.status(500).send({message:'Error del servidor'})
 
             if(article){
-                return res.status(200).send(article)
+                return res.status(200).send({article})
             }else{
                 return res.status(404).send({message:'Esta nota no existe'})
             }

@@ -12,8 +12,12 @@ module.exports = {
     create:function(req,res){
         const data= {
             name: req.body.name,
-            day: req.body.name,
-            price: req.body.price
+            day: req.body.day,
+            pricePesos: req.body.pricePesos,
+            priceAnticipedPesos: req.body.priceAnticipedPesos,
+            priceDolar: req.body.priceDolar,
+            linkMP: req.body.linkMP,
+            linkPP: req.body.linkPP
         };
         const newCourse = new Course(data);
         newCourse.save()
@@ -21,16 +25,18 @@ module.exports = {
         .catch(err =>res.status(500).send({err}))
     },
     show: function(req,res){
-        let courses = req.body.courses;
+        let course = req.body.course;
         if(req.body.err) return res.status(500).send({err})
-        if(req.body.courses) return res.status(200).send({courses})
+        if(req.body.course) return res.status(200).send({course})
         return res.status(404).send({message:'El curso no existe'})
     },
     update: function(req,res){
-        let idCourse = req.params._id;
+        let idCourse = req.params.name;
         const data= {
-            day: req.body.name,
-            price: req.body.price
+            day: req.body.day,
+            price: req.body.price,
+            linkMP: req.body.linkMP,
+            linkPP: req.body.linkPP
         };
         Course.findByIdAndUpdate(idCourse, data, {new:true},(err, courseUpdated) =>{
             if(err) return res.status(500).send({message:'Error en el servidor'})
@@ -55,9 +61,21 @@ module.exports = {
     //middleware para buscar cursos
     find: function(req,res, next){ 
         Course.find({_id: req.params._id})
-        .then(courses => {
-            if(!courses.length) return next();
-            req.body.courses = courses;
+        .then(course => {
+            if(!course.length) return next();
+            req.body.course = course;
+            return next()
+        })
+        .catch(err => {
+            req.body.err = err ;
+            next();
+        })
+    },
+    findByName: function(req,res,next){
+        Course.find({name: req.params.name})
+        .then(course => {
+            if(!course.length) return next();
+            req.body.course = course;
             return next()
         })
         .catch(err => {
