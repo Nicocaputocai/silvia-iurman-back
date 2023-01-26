@@ -34,9 +34,11 @@ module.exports = {
         let idCourse = req.params.name;
         const data= {
             day: req.body.day,
-            price: req.body.price,
-            linkMP: req.body.linkMP,
-            linkPP: req.body.linkPP
+pricePesos: req.body.pricePesos,
+priceAnticipedPesos: req.body.priceAnticipedPesos,
+priceDolar: req.body.priceDolar,
+linkMP: req.body.linkMP,
+linkPP: req.body.linkPP
         };
         Course.findByIdAndUpdate(idCourse, data, {new:true},(err, courseUpdated) =>{
             if(err) return res.status(500).send({message:'Error en el servidor'})

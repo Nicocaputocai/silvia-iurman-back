@@ -3,8 +3,8 @@ const Blog = require('../models/Blog');
 module.exports = {
     getAll: function(req,res){
         Blog.find({}).sort({updatedAt: -1}) //ordena de los últimos a los primeros
-        .then(articules =>{
-            if(articules.length != 0) return res.status(200).json({articules})
+        .then(articles =>{
+            if(articles.length != 0) return res.status(200).json({articles})
             return res.status(204).send({message:'No hay artículos cargados'})
         })
         .catch(err => res.status(500))
@@ -23,11 +23,11 @@ module.exports = {
     show: function(req,res){
         let idArticle = req.params._id
 
-        Blog.findById(idArticle).exec((err, article) =>{
+        Blog.findById(idArticle).exec((err, articles) =>{
             if(err) return res.status(500).send({message:'Error del servidor'})
 
-            if(article){
-                return res.status(200).send({article})
+            if(articles){
+                return res.status(200).send({articles})
             }else{
                 return res.status(404).send({message:'Esta nota no existe'})
             }
@@ -67,9 +67,9 @@ module.exports = {
     //middleware para buscar notas
     find: function(req,res, next){ 
         Blog.find({_id: req.params._id})
-        .then(articules => {
-            if(!articules.length) return next();
-            req.body.articules = articules;
+        .then(articles => {
+            if(!articles.length) return next();
+            req.body.articles = articles;
             return next()
         })
         .catch(err => {
