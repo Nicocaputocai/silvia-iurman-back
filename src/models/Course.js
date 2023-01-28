@@ -6,8 +6,8 @@ const CourseSchema = new mongoose.Schema({
         required: true
     },
     day:{
-        type: String,
-        required: true
+        type: Date,
+        default: Date.now()
     },
     pricePesos:{
         type: Number,
@@ -33,6 +33,6 @@ const CourseSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Course = mongoose.model('Courses', CourseSchema);
+const Course = mongoose.model('Course', CourseSchema);
 
 module.exports = Course;

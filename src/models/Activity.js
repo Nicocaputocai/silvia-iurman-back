@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const ActivitySchema = new mongoose.Schema({
     day:{
-        type: String,
-        required: true
+        type: Date,
+        default: Date.now()
     },
     name:{
         type: String,
@@ -31,18 +31,16 @@ const ActivitySchema = new mongoose.Schema({
     },
     important:{
         type: Boolean,
-        required: true,
         default: 0
     },
     archived:{
         type: Boolean,
-        required: true,
         default: 0
     }
 },{
     timestamps:true
 });
 
-const Activity = mongoose.model('Activities', ActivitySchema);
+const Activity = mongoose.model('Activity', ActivitySchema);
 
 module.exports = Activity

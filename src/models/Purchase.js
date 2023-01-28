@@ -14,7 +14,7 @@ const PurchasesSchema = new mongoose.Schema({
         required: true
     },
     dateOfBirth:{
-        type: String,
+        type: Date,
         required: true
     },
     email:{
@@ -22,10 +22,6 @@ const PurchasesSchema = new mongoose.Schema({
         required: true
     },
     phone:{
-        type: String,
-        required: true
-    },
-    courseName:{
         type: String,
         required: true
     },
@@ -42,11 +38,20 @@ const PurchasesSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: 0
+    },
+    course:{
+        type: mongoose.Types.ObjectId,
+        ref:'Course',
+        default:""
+    },
+    activity:{
+        type:mongoose.Types.ObjectId,
+        ref:'Activity'
     }
 }, {
     timestamps: true
 });
 
-const Purchase = mongoose.model('Purchases', PurchasesSchema);
+const Purchase = mongoose.model('Purchase', PurchasesSchema);
 
 module.exports = Purchase

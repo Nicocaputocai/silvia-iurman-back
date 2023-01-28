@@ -2,7 +2,7 @@ const Activity = require('../models/Activity')
 
 module.exports = {
     getAll: function(req,res){
-        Activity.find({}).sort({updatedAt: -1}) //ordena de los últimos a los primeros
+        Activity.find({}).sort({day: -1}) //ordena de los últimos a los primeros
         .then(activities =>{
             if(activities.length != 0) return res.status(200).json({activities})
             return res.status(204).send({message:'No hay actividades cargadas'})
@@ -27,11 +27,12 @@ module.exports = {
     },
     show: function(req,res){
         let idActivity = req.params._id;
+
         Activity.findById(idActivity).exec((err, activity) =>{
             if(err) return res.status(500).send({message: 'Error en el servidor'})
 
             if(activity){
-                return res.status(200).send(activity)
+                return res.status(200).send({activity})
             }else{
                 return res.status(404).send({message:'Esta nota no existe'})
             }
@@ -80,9 +81,9 @@ module.exports = {
     //middleware para buscar cursos
     find: function(req,res, next){ 
         Activity.find({_id: req.params._id})
-        .then(activities => {
-            if(!activities.length) return next();
-            req.body.activities = activities;
+        .then(activity => {
+            if(!activity.length) return next();
+            req.body.activity = activity;
             return next()
         })
         .catch(err => {
