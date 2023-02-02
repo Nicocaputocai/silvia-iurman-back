@@ -39,15 +39,10 @@ const PurchasesSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
-    course:{
-        type: mongoose.Types.ObjectId,
-        ref:'Course',
+    inscription:{
+        type: String,
         default:""
     },
-    activity:{
-        type:mongoose.Types.ObjectId,
-        ref:'Activity'
-    }
 }, {
     timestamps: true
 });

@@ -7,7 +7,7 @@ module.exports = {
             if(purchases.length != 0) return res.status(200).json({purchases})
             return res.status(204).send({message:'No hay cursos comprados aún'})
         })
-        .catch(err => res.status(500))
+        .catch(err => res.status(500).send(err))
     },
     create:function(req,res){
         const data = {
@@ -19,6 +19,7 @@ module.exports = {
             phone: req.body.phone,
             courseName: req.body.courseName,
             wayToPay: req.body.wayToPay,
+            inscription: req.body.inscription,
         };
         const newPurchase = new Purchase(data);
         newPurchase.save()

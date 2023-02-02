@@ -7,7 +7,7 @@ module.exports = {
             if(courses.length != 0) return res.status(200).json({courses})
             return res.status(204).send({message:'No hay cursos cargados'})
         })
-        .catch(err => res.status(500))
+        .catch(err => res.status(500).send({err}))
     },
     create:function(req,res){
         const data= {
