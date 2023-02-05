@@ -2,7 +2,7 @@ const Activity = require('../models/Activity')
 
 module.exports = {
     getAll: function(req,res){
-        Activity.find({}).sort({day: -1}) //ordena de los últimos a los primeros
+        Activity.find({}).sort({day: 1}) //ordena de los últimos a los primeros
         .then(activities =>{
             if(activities.length != 0) return res.status(200).json({activities})
             return res.status(204).send({message:'No hay actividades cargadas'})
