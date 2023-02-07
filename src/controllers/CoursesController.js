@@ -25,13 +25,20 @@ module.exports = {
         .catch(err =>res.status(500).send({err}))
     },
     show: function(req,res){
-        let course = req.body.course;
-        if(req.body.err) return res.status(500).send({err})
-        if(req.body.course) return res.status(200).send({course})
-        return res.status(404).send({message:'El curso no existe'})
+        let idCourse = req.params._id
+
+        Course.findById(idCourse).exec((err, course) =>{
+            if(err) return res.status(500).send({message:'Error del servidor'})
+
+            if(course){
+                return res.status(200).send({course})
+            }else{
+                return res.status(404).send({message:'Este curso no existe'})
+            }
+        })
     },
     update: function(req,res){
-        let idCourse = req.params.name;
+        let idCourse = req.params._id;
         const data= {
             day: req.body.day,
             pricePesos: req.body.pricePesos,
@@ -74,7 +81,7 @@ module.exports = {
         })
     },
     findByName: function(req,res,next){
-        Course.find({name: req.params.name})
+        Course.find({name: req.params.id})
         .then(course => {
             if(!course.length) return next();
             req.body.course = course;

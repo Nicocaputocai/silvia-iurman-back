@@ -23,11 +23,11 @@ module.exports = {
     show: function(req,res){
         let idArticle = req.params._id
 
-        Blog.findById(idArticle).exec((err, articles) =>{
+        Blog.findById(idArticle).exec((err, article) =>{
             if(err) return res.status(500).send({message:'Error del servidor'})
 
-            if(articles){
-                return res.status(200).send({articles})
+            if(article){
+                return res.status(200).send({article})
             }else{
                 return res.status(404).send({message:'Esta nota no existe'})
             }
@@ -67,9 +67,9 @@ module.exports = {
     //middleware para buscar notas
     find: function(req,res, next){ 
         Blog.find({_id: req.params._id})
-        .then(articles => {
-            if(!articles.length) return next();
-            req.body.articles = articles;
+        .then(article => {
+            if(!article.length) return next();
+            req.body.article = article;
             return next()
         })
         .catch(err => {
