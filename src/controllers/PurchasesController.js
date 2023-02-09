@@ -27,36 +27,38 @@ module.exports = {
         .catch(err => res.status(500).send({err}))
     },
     show: function(req,res){
-        let purchase = req.body.purchase;
+        let idPurchase = req.params._id
+
+        Purchase.findById(idPurchase).exec((err, purchase) =>{
         if(req.body.err) return res.status(500).send({err});
         if(req.body.purchase){
             return res.status(200).send({purchase})
         }else{
             return res.status(404).send({message:'No existe esta compra'})
         }
+    })
     },
     update: function(req,res){
-        let idPurchase = req.params._id;
-
-        const data = {
+        let idPurchase = req.params._id
+        const data= {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             country: req.body.country,
-            dateOfBirth: req.body.dateOfBirth,
+            dateOfBirth: "20-05-1995",
             email: req.body.email,
             phone: req.body.phone,
-            courseName: req.body.courseName,
             wayToPay: req.body.wayToPay,
             pay: req.body.pay,
-            finish: req.body.finish
+            finish: req.body.finish,
+            inscription: req.body.inscription,
         };
-        Purchase.findByIdAndUpdate(idPurchase, data, {new:true}, (err, purchaseUpdated) =>{
-            if(err) return res.status(500).send({message:'Error en el servidor'});
+        Purchase.findByIdAndUpdate(idPurchase, data, {new:true}, (err,purchaseUpdated) =>{
+            if(err) return res.status(500).send(console.log(err))
             if(purchaseUpdated){
-                return res.status(200).send({purchase: purchaseUpdated})
-            }else{
-                return res.status(404).send({message: 'La compra no existe'})
-            };
+                 res.status(200).send({purchase: purchaseUpdated})
+                }else {
+                    return res.status(404).send({message:'La compra no existe'})
+                }
         })
     },
     remove: function(req,res){

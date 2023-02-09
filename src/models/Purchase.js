@@ -14,7 +14,7 @@ const PurchasesSchema = new mongoose.Schema({
         required: true
     },
     dateOfBirth:{
-        type: Date,
+        type: String,
         required: true
     },
     email:{
@@ -31,12 +31,10 @@ const PurchasesSchema = new mongoose.Schema({
     },
     pay:{
         type: Boolean,
-        required: true,
         default: 0
     },
     finish:{
         type: Boolean,
-        required: true,
         default: 0
     },
     inscription:{

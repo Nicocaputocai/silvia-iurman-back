@@ -12,6 +12,7 @@ module.exports = {
     create:function(req,res){
         const data= {
             name: req.body.name,
+            hour: req.body.hour,
             day: req.body.day,
             pricePesos: req.body.pricePesos,
             priceAnticipedPesos: req.body.priceAnticipedPesos,
@@ -41,6 +42,7 @@ module.exports = {
         let idCourse = req.params._id;
         const data= {
             day: req.body.day,
+            hour: req.body.hour,
             pricePesos: req.body.pricePesos,
             priceAnticipedPesos: req.body.priceAnticipedPesos,
             priceDolar: req.body.priceDolar,
@@ -50,7 +52,7 @@ module.exports = {
         Course.findByIdAndUpdate(idCourse, data, {new:true},(err, courseUpdated) =>{
             if(err) return res.status(500).send({message:'Error en el servidor'})
             if(courseUpdated){
-                return res.status(200).send({courseUpdated}) // si no funciona probar course: courseUpdated
+                return res.status(200).send({courseUpdated})
             }else{
                 return res.status(404).send({message:'El curso no existe'})
             }

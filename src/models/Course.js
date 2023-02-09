@@ -9,6 +9,10 @@ const CourseSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
+    hour:{
+        type: String,
+        required: true
+    },
     pricePesos:{
         type: Number,
         required: true
