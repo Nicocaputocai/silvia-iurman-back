@@ -52,10 +52,13 @@ module.exports = {
             finish: req.body.finish,
             inscription: req.body.inscription,
         };
-        Purchase.findByIdAndUpdate(idPurchase, data, {new:true}, (err,purchaseUpdated) =>{
-            if(err) return res.status(500).send(console.log(err))
+        Purchase.findByIdAndUpdate(idPurchase, data, {new:true},(err, purchaseUpdated) =>{
+            if(err){
+                console.log(err)
+                return res.status(500).send({message:'error en el servidor'})
+            }
             if(purchaseUpdated){
-                 res.status(200).send({purchase: purchaseUpdated})
+                return res.status(200).send({purchase: purchaseUpdated})
                 }else {
                     return res.status(404).send({message:'La compra no existe'})
                 }

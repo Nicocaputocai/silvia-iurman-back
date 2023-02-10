@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const PurchasesSchema = new mongoose.Schema({
+const PurchaseSchema = new mongoose.Schema({
     firstName:{
         type: String,
         required: true
@@ -40,11 +40,11 @@ const PurchasesSchema = new mongoose.Schema({
     inscription:{
         type: String,
         default:""
-    },
+    }
 }, {
     timestamps: true
 });
 
-const Purchase = mongoose.model('Purchase', PurchasesSchema);
+const Purchase = mongoose.model('Purchase', PurchaseSchema);
 
 module.exports = Purchase
