@@ -6,6 +6,20 @@ const generateToken = require('../helpers/generateToken')
 const {confirmRegister, forgotPassword} = require('../helpers/sendMails')
 
 module.exports = {
+    getAll: async(req,res) =>{
+        try {
+            return res.status(200).json({
+            ok: true,
+            msg: 'perfil de usuario',
+            admin: req.admin
+        })
+        } catch (error) {
+            res.status(error.status || 500).json({
+                ok: false,
+                msg: error.message || 'upss, hubo un error profile'
+            })
+        }
+    },
     registerAdmin: async(req,res) =>{
         try {
             const {username, password} = req.body;
@@ -52,7 +66,7 @@ module.exports = {
             if (!await user.checkedPassword(password)) {
                 throw createError(403,"Credenciales inválidas")
             }
-            
+
             return res.status(200).json({
                 ok: true,
                 msg: 'usuario logueado',
