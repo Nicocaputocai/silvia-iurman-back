@@ -10,14 +10,13 @@ module.exports = {
         .catch(err => res.status(500).send(err))
     },
     create:function(req,res){
-        const data = {
+        const data ={
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             country: req.body.country,
             dateOfBirth: req.body.dateOfBirth,
             email: req.body.email,
             phone: req.body.phone,
-            courseName: req.body.courseName,
             wayToPay: req.body.wayToPay,
             inscription: req.body.inscription,
         };

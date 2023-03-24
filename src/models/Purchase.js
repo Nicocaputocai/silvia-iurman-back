@@ -29,6 +29,10 @@ const PurchaseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    inscription:{
+        type: String,
+        required: true
+    },
     pay:{
         type: Boolean,
         default: 0
@@ -36,11 +40,8 @@ const PurchaseSchema = new mongoose.Schema({
     finish:{
         type: Boolean,
         default: 0
-    },
-    inscription:{
-        type: String,
-        default:""
     }
+
 }, {
     timestamps: true
 });
