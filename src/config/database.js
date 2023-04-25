@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const CONFIG = require('./config');
+mongoose.set('strictQuery', false);
 
 module.exports = {
     conection: null,

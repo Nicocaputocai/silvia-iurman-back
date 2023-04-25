@@ -10,6 +10,7 @@ const Auth = require('./routes/auth');
 const Blog = require('./routes/blog');
 const Courses = require('./routes/courses');
 const Purchases = require('./routes/purchases');
+const User = require('./routes/user');
 
 
 App.use(bodyParser.json())
@@ -20,6 +21,7 @@ App.use('/api/auth', Auth)
 App.use('/api/blog', Blog);
 App.use('/api/courses', Courses);
 App.use('/api/purchases', Purchases);
+App.use('/api/user', User);
 
 
 module.exports = App;
