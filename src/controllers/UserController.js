@@ -102,22 +102,17 @@ module.exports = {
         }
     },
     reloggedUser: async(req,res) =>{
-        const {token} = req.query;
         try {
-            const user = await User.findById(id);
-            if(!user){
-                throw createError(400, 'Usuario no encontrado')
-            }
             return res.status(200).json({
                 ok: true,
                 msg: 'Usuario logueado',
                 user: {
-                    name: user.username,
-                    email: user.email,
-                    _id: user._id
+                    name: req.user.username,
+                    email: req.user.email,
+                    _id: req.user._id
                 },
                 token: JWTGenerator({
-                    id: user._id
+                    id: req.user._id
                 })
             })
         } catch {
