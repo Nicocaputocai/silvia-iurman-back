@@ -1,7 +1,7 @@
 const errorResponse = require("../helpers/errorResponse");
 const {verify} = require('jsonwebtoken')
 const createError = require('http-errors');
-const User = require("../models/user");
+const User = require("../models/User");
 
 module.exports = async(req,res,next) => {
 

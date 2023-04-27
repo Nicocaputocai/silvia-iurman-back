@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require("../models/User");
 const createError = require('http-errors');
 const {errorResponse, JWTGenerator, generateToken, passwordManager} = require('../helpers')
 /* const {confirmRegister, forgotPassword} = require('../helpers/sendMails') */
