@@ -91,6 +91,7 @@ module.exports = {
                 user: {
                     name: userDB.username,
                     email: userDB.email,
+                    role: userDB.role,
                     _id: userDB._id
                 },
                 token: JWTGenerator({
@@ -109,6 +110,7 @@ module.exports = {
                 user: {
                     name: req.user.username,
                     email: req.user.email,
+                    role: req.user.role,
                     _id: req.user._id
                 },
                 token: JWTGenerator({
