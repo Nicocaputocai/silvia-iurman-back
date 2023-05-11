@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Nicocaputocai/silvia-iurman-back#readme",
   "dependencies": {
+    "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",

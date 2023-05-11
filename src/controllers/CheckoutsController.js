@@ -1,5 +1,8 @@
 const Purchase = require('../models/Purchase');
-const {checkoutMP} = require('../helpers')
+const {checkoutMP, checkoutPaypal, paypalToken} = require('../helpers');
+const mercadopago = require('mercadopago');
+const { default: axios } = require('axios');
+const { getOrderPaypal } = require('../helpers/paypal');
 
 module.exports = {
     mercadoPago: async(req,res) =>{
@@ -23,40 +26,68 @@ module.exports = {
             })
         }
     },
-    paypal: async(req,res) =>{
+    captureMercadoPago: async(req,res) =>{
+        const {id} = req.body;
         try {
-            const data = {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                country: req.body.country,
-                dateOfBirth: req.body.dateOfBirth,
-                email: req.body.email,
-                phone: req.body.phone,
-                wayToPay: req.body.wayToPay,
-                inscription: req.body.inscription,
-                pay: req.body.pay,
-                finish: req.body.finish
-            }
-
-            const purchase = new Purchase(data);
-            const purchaseStore = await purchase.save();
-
-            return res.status(201).json({
-                ok: true,
-                msg: 'Compra registrada',
-                purchase: purchaseStore
-            })
-        } catch (error) {
-            if(error.status !== 500){
-                return res.status(error.status).json({
+            const {body} = await mercadopago.payment.get(id);
+            
+            if(body.status !== 'approved'){
+                return res.status(400).json({
                     ok: false,
-                    msg: error.message || 'upss, hubo un error'
+                    msg: 'Pago cancelado'
                 })
             }
-            console.log(error);
+            
+                //aca va la logica para guardar la compra y el curso en la base de datos
+                return res.status(200).json({
+                    ok: true,
+                    msg: 'Pago aprobado'
+                })
+            } catch (error) {
+                if(error.status !== 500){
+                    return res.status(error.status).json({
+                        ok: false,
+                        msg: error.message || 'upss, hubo un error'
+                    })
+                }
+                console.log(error);
+            }
+            
+    },
+    paypal: async(req,res) =>{
+        try {
+            const link = await checkoutPaypal(req.body);
+            return res.status(200).json({
+                link
+            })
+        } catch (error) {
             return res.status(500).json({
+                error: error.response
+            })
+        }
+    },
+    capturePayPal: async(req,res) =>{
+
+        const data = await getOrderPaypal(req.body.id);
+
+        if(!data){
+            return res.status(400).json({
                 ok: false,
-                msg: 'Contacte al administrador'
+                msg: 'Pago cancelado'
+            })
+        }
+
+        if(data.status === 'VOIDED'){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Pago cancelado'
+            })
+        }
+
+        if(data.status === 'COMPLETED'){
+            return res.status(200).json({
+                ok: true,
+                msg: 'Pago aprobado'
             })
         }
     }

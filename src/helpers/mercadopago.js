@@ -19,8 +19,8 @@ const checkoutMP = async (item) => {
                 }
             ],
             back_urls: {
-                success: 'http://localhost:5173/checkout/success',
-                failure: 'http://localhost:5173/checkout/failure',
+                success: `${process.env.API_FRONTEND}/checkout/payment`,
+                failure: `${process.env.API_FRONTEND}/checkout/payment`,
                 pending: ''
             },
             auto_return: 'approved',

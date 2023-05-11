@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: '/public/img/default_avatar.webp'
     },
+    activity: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: REF.ACTIVITY
+        }
+    ],
     courses: [
         {
             type: mongoose.Schema.Types.ObjectId,
