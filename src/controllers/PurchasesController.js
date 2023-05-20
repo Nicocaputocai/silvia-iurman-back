@@ -2,7 +2,12 @@ const Purchase = require('../models/Purchase')
 
 module.exports = {
     getAll: function(req,res){
-        Purchase.find({}).sort({updatedAt: -1}) //ordena de los últimos a los primeros
+        Purchase.find({})
+        .populate({
+            path: 'user_id',
+            select: '-password'
+        })
+        .sort({updatedAt: -1}) //ordena de los últimos a los primeros
         .then(purchases =>{
             if(purchases.length != 0) return res.status(200).json({purchases})
             return res.status(204).send({message:'No hay cursos comprados aún'})

@@ -3,6 +3,21 @@ const mongoose = require('mongoose');
 const {hash, compare} = require('bcryptjs')
 
 const userSchema = new mongoose.Schema({
+    firstName:{
+        type: String,
+    },
+    lastName:{
+        type: String,
+    },
+    country:{
+        type: String,
+    },
+    dateOfBirth:{
+        type: String,
+    },
+    phone:{
+        type: String,
+    },
     username:{
         type: String,
         required: true,
@@ -42,6 +57,12 @@ const userSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: REF.COURSE
+        }
+    ],
+    modules: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: REF.MODULE
         }
     ]
 });

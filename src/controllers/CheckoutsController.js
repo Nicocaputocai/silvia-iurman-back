@@ -1,13 +1,52 @@
 const Purchase = require('../models/Purchase');
+const Activity = require('../models/Activity');
+const Module = require('../models/Module');
+const Course = require('../models/Course');
+const User = require('../models/User');
 const {checkoutMP, checkoutPaypal, paypalToken} = require('../helpers');
 const mercadopago = require('mercadopago');
 const { default: axios } = require('axios');
 const { getOrderPaypal } = require('../helpers/paypal');
+const { default: mongoose } = require('mongoose');
+const { TYPETOPAY } = require('../types/types');
 
 module.exports = {
     mercadoPago: async(req,res) =>{
+        let {product, idPurchase} = req.body;
+        if (typeof idPurchase === 'string') {
+            idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
+          } else {
+            return res.status(400).json({
+              ok: false,
+              msg: 'El valor de idPurchase no es un string',
+            });
+          }
         try {
-            const init_url = await checkoutMP(req.body);
+            const user = await User.findById(req.user._id);
+            if(user.activity.includes(idPurchase)){
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Ya esta inscripto a esta actividad'
+                })
+            }
+
+            if(user.modules.includes(idPurchase)){
+                console.log('Ya esta inscripto a esta actividad');
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Ya esta inscripto a este modulo'
+                })
+            }
+
+            if(user.courses.includes(idPurchase)){
+                console.log('Ya esta inscripto a esta actividad');
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Ya esta inscripto a este modulo'
+                })
+            }
+
+            const init_url = await checkoutMP(product);
             return res.status(200).json({
                 ok: true,
                 init_url
@@ -27,30 +66,117 @@ module.exports = {
         }
     },
     captureMercadoPago: async(req,res) =>{
-        const {id} = req.body;
+        let {id,idPurchase} = req.body;
+         if (typeof idPurchase === 'string') {
+            idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
+          } else {
+            return res.status(400).json({
+              ok: false,
+              msg: 'El valor de idPurchase no es un string',
+            });
+          }
         try {
             const {body} = await mercadopago.payment.get(id);
-            
+
+            const user = await User.findById(req.user._id);
+
+                if(!user){
+                    return res.status(400).json({
+                        ok: false,
+                        msg: 'Usuario no encontrado'
+                    })
+                }
+
             if(body.status !== 'approved'){
                 return res.status(400).json({
                     ok: false,
                     msg: 'Pago cancelado'
                 })
             }
-            
-                //aca va la logica para guardar la compra y el curso en la base de datos
+
+            const [ activity, module, course ] = await Promise.all([
+                Activity.findById(idPurchase),
+                Module.findById(idPurchase),
+                Course.findById(idPurchase)
+            ])
+
+            console.log({
+                activity,
+                module,
+                course
+            });
+
+            if (activity) {
+                user.activity = [...user.activity, activity._id];
+                await user.save();
+
+                const purchase = new Purchase({
+                    user_id: user._id,
+                    wayToPay: TYPETOPAY.MP,
+                    inscription: 'actividad',
+                    pay:true,
+                });
+
+                await purchase.save();
+
                 return res.status(200).json({
                     ok: true,
-                    msg: 'Pago aprobado'
+                    msg: 'Pago aprobado',
+                    purchase
                 })
+              } 
+
+              if (module) {
+                user.modules = [...user.modules, module._id];
+                await user.save();
+
+                const purchase = new Purchase({
+                    user_id: user._id,
+                    wayToPay: TYPETOPAY.MP,
+                    inscription: 'modulo',
+                    pay:true,
+                });
+
+                await purchase.save();
+
+                return res.status(200).json({
+                    ok: true,
+                    msg: 'Pago aprobado',
+                    purchase
+                })
+              } 
+              console.log('no deberia pasar por aca 2')
+              if (course) {
+                user.courses = [...user.courses, course._id];
+                await user.save();
+
+                const purchase = new Purchase({
+                    user_id: user._id,
+                    wayToPay: TYPETOPAY.MP,
+                    inscription: 'course',
+                    pay:true,
+                });
+
+                await purchase.save();
+
+                return res.status(200).json({
+                    ok: true,
+                    msg: 'Pago aprobado',
+                    purchase
+                })
+              } 
+              console.log('no deberia pasar por aca 3')
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Compra no encontrada'
+                })
+
             } catch (error) {
-                if(error.status !== 500){
-                    return res.status(error.status).json({
-                        ok: false,
-                        msg: error.message || 'upss, hubo un error'
-                    })
-                }
-                console.log(error);
+                console.log(error)
+                return res.status(500).json({
+                    ok: false,
+                    msg: 'Contacte al administrador'
+                })
             }
             
     },
@@ -68,7 +194,9 @@ module.exports = {
     },
     capturePayPal: async(req,res) =>{
 
-        const data = await getOrderPaypal(req.body.id);
+        const {id, idPurchase} = req.body;
+
+        const data = await getOrderPaypal(id);
 
         if(!data){
             return res.status(400).json({
@@ -85,10 +213,86 @@ module.exports = {
         }
 
         if(data.status === 'COMPLETED'){
-            return res.status(200).json({
-                ok: true,
-                msg: 'Pago aprobado'
-            })
+
+            try {
+                const user = await User.findById(req.user._id);
+
+                if(!user){
+                    return res.status(400).json({
+                        ok: false,
+                        msg: 'Usuario no encontrado'
+                    })
+                }
+
+            const [ activity, module, course ] = await Promise.all([
+                Activity.findOne({ _id: idPurchase }),
+                Module.findOne({ _id: idPurchase }),
+                Course.findOne({ _id: idPurchase })
+            ])
+
+            if (activity) {
+                user.activity = [...user.activity, activity._id];
+                await user.save();
+
+                const purchase = new Purchase({
+                    user_id: user._id,
+                    wayToPay: TYPETOPAY.MP,
+                    inscription: 'actividad',
+                    pay:true,
+                });
+
+                await purchase.save();
+
+                return res.status(200).json({
+                    ok: true,
+                    msg: 'Pago aprobado',
+                    purchase
+                })
+              } else if (module) {
+                user.modules = [...user.activity, module._id];
+                await user.save();
+
+                const purchase = new Purchase({
+                    user_id: user._id,
+                    wayToPay: TYPETOPAY.MP,
+                    inscription: 'modulo',
+                    pay:true,
+                });
+
+                await purchase.save();
+
+                return res.status(200).json({
+                    ok: true,
+                    msg: 'Pago aprobado',
+                    purchase
+                })
+              } else if (course) {
+                user.courses = [...user.activity, course._id];
+                await user.save();
+
+                const purchase = new Purchase({
+                    user_id: user._id,
+                    wayToPay: TYPETOPAY.MP,
+                    inscription: 'course',
+                    pay:true,
+                });
+
+                await purchase.save();
+
+                return res.status(200).json({
+                    ok: true,
+                    msg: 'Pago aprobado',
+                    purchase
+                })
+              } else {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Compra no encontrada'
+                })
+              }
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 }

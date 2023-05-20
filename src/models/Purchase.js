@@ -1,33 +1,16 @@
 const mongoose = require('mongoose');
+const { REF, TYPETOPAY } = require('../types/types');
 
 const PurchaseSchema = new mongoose.Schema({
-    firstName:{
-        type: String,
-        required: true
-    },
-    lastName:{
-        type: String,
-        required: true
-    },
-    country:{
-        type: String,
-        required: true
-    },
-    dateOfBirth:{
-        type: String,
-        required: true
-    },
-    email:{
-        type: String,
-        required: true
-    },
-    phone:{
-        type: String,
+    user_id:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: REF.USER,
         required: true
     },
     wayToPay:{
         type: String,
-        required: true
+        required: true,
+        enum: [TYPETOPAY.MP, TYPETOPAY.PP, TYPETOPAY.TRANS]
     },
     inscription:{
         type: String,
@@ -35,11 +18,11 @@ const PurchaseSchema = new mongoose.Schema({
     },
     pay:{
         type: Boolean,
-        default: 0
+        default: false
     },
     finish:{
         type: Boolean,
-        default: 0
+        default: false
     }
 
 }, {

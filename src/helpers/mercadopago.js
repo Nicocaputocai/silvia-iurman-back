@@ -13,7 +13,7 @@ const checkoutMP = async (item) => {
                     description: item.description,
                     picture_url: item.picture_url ? item.picture_url : 'https://www.mercadopago.com/org-img/MP3/home/logomp3.gif',
                     quantity: 1,
-                    unit_price: item.price,
+                    unit_price: item.pricePesos,
                     category_id: 'courses',
                     currency_id: 'ARS'
                 }

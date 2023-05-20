@@ -10,9 +10,23 @@ const REF = Object.freeze({
     ACTIVITY: 'Activity',
     BLOG: 'Blog',
     PURCHASE: 'Purchase',
+    MODULE: 'Module',
+});
+
+const TYPEMODULE = Object.freeze({
+    PRESENCIAL: 'presencial',
+    VIRTUAL: 'virtual',
+});
+
+const TYPETOPAY = Object.freeze({
+    MP: 'mercado-pago',
+    PP: 'paypal',
+    TRANS: 'transferencia',
 });
 
 module.exports = {
     ROLES,
     REF,
+    TYPEMODULE,
+    TYPETOPAY,
 };

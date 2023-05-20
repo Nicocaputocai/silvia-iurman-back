@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const createError = require('http-errors');
-const {errorResponse, JWTGenerator, generateToken, passwordManager} = require('../helpers')
+const {errorResponse, JWTGenerator, generateToken, passwordManager} = require('../helpers');
+const { REF } = require("../types/types");
 /* const {confirmRegister, forgotPassword} = require('../helpers/sendMails') */
 
 module.exports = {
@@ -75,7 +76,10 @@ module.exports = {
                     {username: user.toLowerCase().trim()},
                     {email: user.toLowerCase().trim()}
                 ]
-            });
+            })
+            .populate('activity')
+            .populate('courses')
+            .populate('modules')
 
             if(!userDB){
                 throw createError(400, 'Usuario o contraseña incorrectos')
@@ -92,13 +96,17 @@ module.exports = {
                     name: userDB.username,
                     email: userDB.email,
                     role: userDB.role,
-                    _id: userDB._id
+                    _id: userDB._id,
+                    activities: userDB.activity,
+                    courses: userDB.courses,
+                    modules: userDB.modules
                 },
                 token: JWTGenerator({
                     id: userDB._id
                 })
             })
         } catch (error) {
+            console.log(error);
             return errorResponse(res,error, "Error en el login")
         }
     },
@@ -111,7 +119,10 @@ module.exports = {
                     name: req.user.username,
                     email: req.user.email,
                     role: req.user.role,
-                    _id: req.user._id
+                    _id: req.user._id,
+                    activities: req.user.activity,
+                    courses: req.user.courses,
+                    modules: req.user.modules
                 },
                 token: JWTGenerator({
                     id: req.user._id
