@@ -8,7 +8,7 @@ const mercadopago = require('mercadopago');
 const { default: axios } = require('axios');
 const { getOrderPaypal } = require('../helpers/paypal');
 const { default: mongoose } = require('mongoose');
-const { TYPETOPAY } = require('../types/types');
+const { TYPETOPAY, REF } = require('../types/types');
 
 module.exports = {
     mercadoPago: async(req,res) =>{
@@ -65,56 +65,44 @@ module.exports = {
             })
         }
     },
-    captureMercadoPago: async(req,res) =>{
-        let {id,idPurchase} = req.body;
-         if (typeof idPurchase === 'string') {
-            idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
-          } else {
-            return res.status(400).json({
-              ok: false,
-              msg: 'El valor de idPurchase no es un string',
-            });
-          }
+    captureMercadoPago: async (req, res) => {
+        let { id, idPurchase, type } = req.body;
+        /* if (typeof idPurchase === 'string') {
+           idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
+         } else {
+           return res.status(400).json({
+             ok: false,
+             msg: 'El valor de idPurchase no es un string',
+           });
+         } */
         try {
-            const {body} = await mercadopago.payment.get(id);
-
+            
+            const { body } = await mercadopago.payment.get(id);
+            
             const user = await User.findById(req.user._id);
-
-                if(!user){
-                    return res.status(400).json({
-                        ok: false,
-                        msg: 'Usuario no encontrado'
-                    })
-                }
-
-            if(body.status !== 'approved'){
+            if (!user) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Usuario no encontrado'
+                })
+            }
+            
+            if (body.status !== 'approved') {
                 return res.status(400).json({
                     ok: false,
                     msg: 'Pago cancelado'
                 })
             }
-
-            const [ activity, module, course ] = await Promise.all([
-                Activity.findById(idPurchase),
-                Module.findById(idPurchase),
-                Course.findById(idPurchase)
-            ])
-
-            console.log({
-                activity,
-                module,
-                course
-            });
-
-            if (activity) {
-                user.activity = [...user.activity, activity._id];
+            
+            if(type === REF.ACTIVITY) {
+                user.activity = [...user.activity, idPurchase];
                 await user.save();
-
                 const purchase = new Purchase({
                     user_id: user._id,
                     wayToPay: TYPETOPAY.MP,
-                    inscription: 'actividad',
-                    pay:true,
+                    inscription: idPurchase,
+                    inscriptionModel: REF.ACTIVITY,
+                    pay: true,
                 });
 
                 await purchase.save();
@@ -124,17 +112,15 @@ module.exports = {
                     msg: 'Pago aprobado',
                     purchase
                 })
-              } 
-
-              if (module) {
-                user.modules = [...user.modules, module._id];
+            } else if (type === REF.MODULE){
+                user.modules = [...user.modules, idPurchase];
                 await user.save();
-
                 const purchase = new Purchase({
                     user_id: user._id,
                     wayToPay: TYPETOPAY.MP,
-                    inscription: 'modulo',
-                    pay:true,
+                    inscription: idPurchase,
+                    inscriptionModel: REF.MODULE,
+                    pay: true,
                 });
 
                 await purchase.save();
@@ -144,17 +130,15 @@ module.exports = {
                     msg: 'Pago aprobado',
                     purchase
                 })
-              } 
-              console.log('no deberia pasar por aca 2')
-              if (course) {
-                user.courses = [...user.courses, course._id];
+            } else if (type === REF.COURSE){
+                user.courses = [...user.courses, idPurchase];
                 await user.save();
-
                 const purchase = new Purchase({
                     user_id: user._id,
                     wayToPay: TYPETOPAY.MP,
-                    inscription: 'course',
-                    pay:true,
+                    inscription: idPurchase,
+                    inscriptionModel: REF.COURSE,
+                    pay: true,
                 });
 
                 await purchase.save();
@@ -164,21 +148,21 @@ module.exports = {
                     msg: 'Pago aprobado',
                     purchase
                 })
-              } 
-              console.log('no deberia pasar por aca 3')
+            } else {
                 return res.status(400).json({
                     ok: false,
                     msg: 'Compra no encontrada'
                 })
-
-            } catch (error) {
-                console.log(error)
-                return res.status(500).json({
-                    ok: false,
-                    msg: 'Contacte al administrador'
-                })
             }
-            
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                ok: false,
+                msg: 'Contacte al administrador'
+            })
+        }
+
     },
     paypal: async(req,res) =>{
         try {

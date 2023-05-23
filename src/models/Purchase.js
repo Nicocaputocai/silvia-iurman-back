@@ -12,9 +12,15 @@ const PurchaseSchema = new mongoose.Schema({
         required: true,
         enum: [TYPETOPAY.MP, TYPETOPAY.PP, TYPETOPAY.TRANS]
     },
-    inscription:{
-        type: String,
+    inscription: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: 'inscriptionModel',
         required: true
+      },
+    inscriptionModel: {
+        type: String,
+        required: true,
+        enum: [REF.ACTIVITY, REF.COURSE, REF.MODULE]
     },
     pay:{
         type: Boolean,

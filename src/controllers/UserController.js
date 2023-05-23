@@ -93,13 +93,18 @@ module.exports = {
                 ok: true,
                 msg: 'Usuario logueado',
                 user: {
+                    firstName: userDB.firstName,
+                    lastName: userDB.lastName,
+                    country: userDB.country,
+                    dateOfBirth: userDB.dateOfBirth,
+                    phone: userDB.phone,
                     name: userDB.username,
                     email: userDB.email,
                     role: userDB.role,
-                    _id: userDB._id,
-                    activities: userDB.activity,
-                    courses: userDB.courses,
-                    modules: userDB.modules
+                    avatar: userDB.avatar,
+                    activity: userDB.activity,
+                    courses: userDB.courses, 
+                    modules: userDB.modules,
                 },
                 token: JWTGenerator({
                     id: userDB._id
@@ -116,13 +121,18 @@ module.exports = {
                 ok: true,
                 msg: 'Usuario logueado',
                 user: {
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    country: req.user.country,
+                    dateOfBirth: req.user.dateOfBirth,
+                    phone: req.user.phone,
                     name: req.user.username,
                     email: req.user.email,
                     role: req.user.role,
-                    _id: req.user._id,
-                    activities: req.user.activity,
-                    courses: req.user.courses,
-                    modules: req.user.modules
+                    avatar: req.user.avatar,
+                    activity: req.user.activity,
+                    courses: req.user.courses, 
+                    modules: req.user.modules,
                 },
                 token: JWTGenerator({
                     id: req.user._id
@@ -130,6 +140,42 @@ module.exports = {
             })
         } catch {
             return errorResponse(res,error, "Error en el login");
+        }
+    },
+    updateUser: async(req,res) =>{
+        const {birthday, country, firstName, lastName, phone} = req.body;
+
+        try {
+            const user = await User.findByIdAndUpdate(req.user._id,{
+                dateOfBirth: birthday,
+                country,
+                firstName,
+                lastName,
+                phone},{new: true});
+
+            return res.status(200).json({
+                ok: true,
+                msg: 'Usuario actualizado',
+                user: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    country: user.country,
+                    dateOfBirth: user.dateOfBirth,
+                    phone: user.phone,
+                    name: user.username,
+                    email: user.email,
+                    role: user.role,
+                    avatar: user.avatar,
+                    activity: user.activity,
+                    courses: user.courses,
+                    modules: user.modules,
+                },
+                token: JWTGenerator({
+                    id: user._id
+                })
+            })
+        } catch (error){
+            console.log(error);
         }
     }
 }

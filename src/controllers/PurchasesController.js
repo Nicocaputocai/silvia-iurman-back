@@ -7,6 +7,9 @@ module.exports = {
             path: 'user_id',
             select: '-password'
         })
+        .populate({
+            path: 'inscription'
+        })
         .sort({updatedAt: -1}) //ordena de los últimos a los primeros
         .then(purchases =>{
             if(purchases.length != 0) return res.status(200).json({purchases})
