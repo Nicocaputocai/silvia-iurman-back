@@ -3,11 +3,10 @@ const Activity = require('../models/Activity');
 const Module = require('../models/Module');
 const Course = require('../models/Course');
 const User = require('../models/User');
-const {checkoutMP, checkoutPaypal, paypalToken} = require('../helpers');
+const {checkoutMP, checkoutPaypal} = require('../helpers');
 const mercadopago = require('mercadopago');
-const { default: axios } = require('axios');
 const { getOrderPaypal } = require('../helpers/paypal');
-const { default: mongoose } = require('mongoose');
+const  mongoose  = require('mongoose');
 const { TYPETOPAY, REF } = require('../types/types');
 
 module.exports = {

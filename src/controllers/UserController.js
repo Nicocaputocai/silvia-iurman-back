@@ -1,8 +1,6 @@
 const User = require("../models/User");
 const createError = require('http-errors');
-const {errorResponse, JWTGenerator, generateToken, passwordManager} = require('../helpers');
-const { REF } = require("../types/types");
-/* const {confirmRegister, forgotPassword} = require('../helpers/sendMails') */
+const {errorResponse, JWTGenerator } = require('../helpers');
 
 module.exports = {
     getAll: async(req,res) =>{

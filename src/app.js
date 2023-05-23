@@ -13,7 +13,6 @@ const Purchases = require('./routes/purchases');
 const User = require('./routes/user');
 const Checkouts = require('./routes/checkouts');
 const Modules = require('./routes/modules');
-const { checkUserLogged } = require('./middlewares');
 
 
 App.use(bodyParser.json())
@@ -27,9 +26,6 @@ App.use('/api/purchases', Purchases);
 App.use('/api/user', User);
 App.use('/api/checkout', Checkouts);
 App.use('/api/modules', Modules);
-App.get('/api/prueba', checkUserLogged,(req, res) => {
-    return res.json('Welcome to the API');
-});
 
 
 module.exports = App;
