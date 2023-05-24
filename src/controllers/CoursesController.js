@@ -11,7 +11,7 @@ module.exports = {
     },
     create:function(req,res){
         const data= {
-            name: req.body.name,
+            title: req.body.title,
             hour: req.body.hour,
             day: req.body.day,
             pricePesos: req.body.pricePesos,

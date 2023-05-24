@@ -10,10 +10,10 @@ const checkoutMP = async (item) => {
                 {
                     id: item._id,
                     title: item.title,
-                    description: item.description,
+                    description: item.description.length > 60 ? item.description.slice(0,60) + '...' : item.description,
                     picture_url: item.picture_url ? item.picture_url : 'https://www.mercadopago.com/org-img/MP3/home/logomp3.gif',
                     quantity: 1,
-                    unit_price: item.pricePesos,
+                    unit_price: item.pricePesos ? +item.pricePesos : +item.price,
                     category_id: 'courses',
                     currency_id: 'ARS'
                 }

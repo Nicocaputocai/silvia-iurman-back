@@ -33,9 +33,13 @@ module.exports = {
             }
         })
     },
-    update: function(req,res){
+    update: async function(req,res){
         let idArticle = req.params._id;
         let image = req.files[0] ? req.files[0].filename : req.body.img;
+        const article = await Blog.findById(idArticle)
+        if(article.img != image && article.img != ""){
+            deleteFile(article.img)
+        }
         const data ={
             title: req.body.title,
             img: image,
@@ -52,8 +56,12 @@ module.exports = {
             }
         })
     },
-    remove: function(req,res){
+    remove: async function(req,res){
         let idArticle = req.params._id;
+        const article = await Blog.findById(idArticle)
+        if(article.img && article.img != ""){
+            deleteFile(article.img)
+        }
 
         Blog.findByIdAndRemove(idArticle, (err, articleRemove)=>{
             if(err) return res.status(500).send({message:'Error en el servidor'})

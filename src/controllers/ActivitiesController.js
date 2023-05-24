@@ -1,4 +1,5 @@
-const Activity = require('../models/Activity')
+const { deleteFile } = require('../helpers');
+const Activity = require('../models/Activity');
 
 module.exports = {
     getAll: function(req,res){
@@ -12,7 +13,7 @@ module.exports = {
     create:function(req,res){
         const data = {
             day: req.body.day,
-            name: req.body.name,
+            title: req.body.title,
             description: req.body.description,
             price: req.body.price,
             img: (req.files[0])?req.files[0].filename: "",
@@ -38,12 +39,16 @@ module.exports = {
             }
         })
     },
-    update: function(req,res){
+    update: async function(req,res){
         let idActivity = req.params._id;
         let image = req.files[0] ? req.files[0].filename : req.body.img;
+        const activity = await Activity.findById(idActivity)
+        if(activity.img != image && activity.img != ""){
+            deleteFile(activity.img)
+        }
         const data ={
             day: req.body.day,
-            name: req.body.name,
+            title: req.body.title,
             description: req.body.description,
             price: req.body.price,
             img: image,
@@ -66,8 +71,12 @@ module.exports = {
             }
         });
     },
-    remove: function(req,res){
+    remove: async function(req,res){
         let idActivity = req.params._id
+        const activity = await Activity.findById(idActivity)
+        if(activity.img && activity.img != ""){
+            deleteFile(activity.img)
+        }
         Activity.findByIdAndRemove(idActivity,(err, activityRemoved) =>{
             if(err) return res.status(500).send({message:'Error en el servidor'})
 

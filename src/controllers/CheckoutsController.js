@@ -66,14 +66,6 @@ module.exports = {
     },
     captureMercadoPago: async (req, res) => {
         let { id, idPurchase, type } = req.body;
-        /* if (typeof idPurchase === 'string') {
-           idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
-         } else {
-           return res.status(400).json({
-             ok: false,
-             msg: 'El valor de idPurchase no es un string',
-           });
-         } */
         try {
             
             const { body } = await mercadopago.payment.get(id);
@@ -109,7 +101,7 @@ module.exports = {
                 return res.status(200).json({
                     ok: true,
                     msg: 'Pago aprobado',
-                    purchase
+                    purchase,
                 })
             } else if (type === REF.MODULE){
                 user.modules = [...user.modules, idPurchase];
@@ -123,11 +115,10 @@ module.exports = {
                 });
 
                 await purchase.save();
-
                 return res.status(200).json({
                     ok: true,
                     msg: 'Pago aprobado',
-                    purchase
+                    purchase,
                 })
             } else if (type === REF.COURSE){
                 user.courses = [...user.courses, idPurchase];
@@ -141,11 +132,10 @@ module.exports = {
                 });
 
                 await purchase.save();
-
                 return res.status(200).json({
                     ok: true,
                     msg: 'Pago aprobado',
-                    purchase
+                    purchase,
                 })
             } else {
                 return res.status(400).json({
