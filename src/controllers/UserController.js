@@ -86,7 +86,6 @@ module.exports = {
             if(!await userDB.checkedPassword(password)){
                 throw createError(400, 'Usuario o contraseña incorrectos')
             }
-
             return res.status(200).json({
                 ok: true,
                 msg: 'Usuario logueado',
@@ -136,7 +135,7 @@ module.exports = {
                     id: req.user._id
                 })
             })
-        } catch {
+        } catch(error) {
             return errorResponse(res,error, "Error en el login");
         }
     },
