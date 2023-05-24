@@ -13,7 +13,7 @@ const Purchases = require('./routes/purchases');
 const User = require('./routes/user');
 const Checkouts = require('./routes/checkouts');
 const Modules = require('./routes/modules');
-
+const Email = require('./routes/email');
 
 App.use(bodyParser.json())
 App.use(bodyParser.urlencoded({extended: true}))
@@ -26,6 +26,8 @@ App.use('/api/purchases', Purchases);
 App.use('/api/user', User);
 App.use('/api/checkout', Checkouts);
 App.use('/api/modules', Modules);
+//test
+App.use('/api/email', Email);
 
 
 module.exports = App;

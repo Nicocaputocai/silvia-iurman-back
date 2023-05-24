@@ -11,6 +11,19 @@ const transport = nodemailer.createTransport({
 });
 
 module.exports = {
+    testEmail: async (data) => {
+        const { name, email } = data
+        const response = await transport.sendMail({
+            from: "The Division Code",
+            to: email,
+            subject: "test",
+            text: "test",
+            html: `
+                <p> Hola ${name}, este es un test</p>
+                    `
+        })
+        return response
+    },
     confirmRegister: async (data) => {
         const { name, email, token } = data
         console.log(data);
