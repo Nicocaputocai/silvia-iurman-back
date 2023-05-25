@@ -62,5 +62,40 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+    },
+    emailInscriptionUser: async (data) => {
+        const { name, email, purchase } = data
+        try {
+            const infoMail = await transport.sendMail({
+                from: "The Division Code",
+                to: email,
+                subject: "Inscripción exitosa",
+                text: "Inscripción exitosa",
+                html: `
+                <p> Hola ${name}, la inscripción a ${purchase} se realizó con éxito</p>
+                <p>Hace clic <a href="${process.env.API_FRONTEND}/login">aqui</a> para acceder a tu cuenta!</p>
+                `
+            })
+            console.log(infoMail);
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    emailInscriptionAdmin: async (data) => {
+        const { email, purchase } = data
+        try {
+            const infoMail = await transport.sendMail({
+                from: "The Division Code",
+                to: process.env.MAIL_ADMIN,
+                subject: "Inscripción exitosa",
+                text: "Inscripción exitosa",
+                html: `
+                <p> La inscripción del usuario ${email} al curso ${purchase} se realizó con éxito</p>
+                `
+            })
+            console.log(infoMail);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

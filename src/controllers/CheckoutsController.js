@@ -8,6 +8,7 @@ const mercadopago = require('mercadopago');
 const { getOrderPaypal } = require('../helpers/paypal');
 const  mongoose  = require('mongoose');
 const { TYPETOPAY, REF } = require('../types/types');
+const { emailInscriptionAdmin, emailInscriptionUser } = require('../helpers/sendMails');
 
 module.exports = {
     mercadoPago: async(req,res) =>{
@@ -98,6 +99,17 @@ module.exports = {
 
                 await purchase.save();
 
+                await emailInscriptionUser({
+                    name:user.username,
+                    email:user.email,
+                    purchase: purchase._id,
+                });
+
+                await emailInscriptionAdmin({
+                    email:user.email,
+                    purchase: purchase._id,
+                })
+
                 return res.status(200).json({
                     ok: true,
                     msg: 'Pago aprobado',
@@ -115,6 +127,18 @@ module.exports = {
                 });
 
                 await purchase.save();
+
+                await emailInscriptionUser({
+                    name:user.username,
+                    email:user.email,
+                    purchase: purchase._id,
+                });
+
+                await emailInscriptionAdmin({
+                    email:user.email,
+                    purchase: purchase._id,
+                })
+
                 return res.status(200).json({
                     ok: true,
                     msg: 'Pago aprobado',
@@ -132,6 +156,18 @@ module.exports = {
                 });
 
                 await purchase.save();
+
+                await emailInscriptionUser({
+                    name:user.username,
+                    email:user.email,
+                    purchase: purchase._id,
+                });
+
+                await emailInscriptionAdmin({
+                    email:user.email,
+                    purchase: purchase._id,
+                })
+
                 return res.status(200).json({
                     ok: true,
                     msg: 'Pago aprobado',
