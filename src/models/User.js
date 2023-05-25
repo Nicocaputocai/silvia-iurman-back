@@ -47,6 +47,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: '/public/img/default_avatar.webp'
     },
+    confirmed:{
+        type: Boolean,
+        default: false
+    },
+    uuid: {
+        type: String,
+        default: ''
+    },
     activity: [
         {
             type: mongoose.Schema.Types.ObjectId,

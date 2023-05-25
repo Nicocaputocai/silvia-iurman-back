@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const createError = require('http-errors');
-const {errorResponse, JWTGenerator } = require('../helpers');
+const {errorResponse, JWTGenerator, generateToken } = require('../helpers');
+const { confirmRegister, forgotPassword } = require("../helpers/sendMails");
 
 module.exports = {
     getAll: async(req,res) =>{
@@ -32,7 +33,7 @@ module.exports = {
                 email: req.body.email.toLowerCase().trim(),
                 password: req.body.password,
             }
-
+            
             let user = await User.findOne({
                 $or: [
                     {username: data.username},
@@ -43,13 +44,20 @@ module.exports = {
             if(user){
                 throw createError(400, 'Usuario o email ya existente')
             }
-
+            const uuid = generateToken();
+            data.uuid = uuid;
             user = new User(data);
             const userStore = await user.save();
 
+            await confirmRegister({
+                email: userStore.email,
+                name: userStore.username,
+                uuid: userStore.uuid
+            })
+
             return res.status(201).json({
                 ok: true,
-                msg: 'Usuario registrado',
+                msg: 'Usuario registrado, revise su correo para confirmar la cuenta',
                 user: {
                     name: userStore.username,
                     email: userStore.email,
@@ -174,5 +182,72 @@ module.exports = {
         } catch (error){
             console.log(error);
         }
+    },
+    confirmAccount: async(req,res) =>{
+        const {uuid} = req.params;
+        try {
+            const user = await User.findOne({uuid});
+            if(!user){
+                throw createError(400, 'Usuario no encontrado')
+            }
+            await User.findByIdAndUpdate(user._id,{
+                confirmed: true,
+            });
+            return res.status(200).json({
+                ok: true,
+                msg: 'Usuario confirmado'
+            })
+        } catch (error) {
+            return errorResponse(res,error, "Error en el confirmar usuario")
+        }
+    },
+    sendTokenRecovery:async(req,res) =>{
+        const {email} = req.body;
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(400).json({
+                ok: false,
+                msg: 'El usuario no existe'
+            })
+        }   
+        await forgotPassword({
+            name: user.username,
+            email: user.email,
+            uuid: user.uuid
+        })
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'Se ha enviado un email con instrucciones'
+        })
+        //el link del email enviado redirige a la vista de recuperacion
+        //desde el front se recibe la nueva contraseña en el body y el uuid en params
+        //se verifican si existe el usuario con ese uuid y se actualiza la contraseña
+        // se redirige al login
+    },
+    recoveryPassword: async (req,res) =>{
+        const {password, uuid} = req.body;
+        try {
+            const user = await User.findOne({uuid});
+            if(!user){
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'El usuario no existe'
+                })
+            }
+            user.password = password;
+            user.uuid = generateToken();
+            await user.save();
+            return res.status(200).json({
+                ok: true,
+                msg: 'Contraseña actualizada'
+            })
+        } catch(error){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Error al actualizar la contraseña'
+            })
+        } 
+    
     }
 }

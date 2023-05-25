@@ -25,7 +25,7 @@ module.exports = {
         return response
     },
     confirmRegister: async (data) => {
-        const { name, email, token } = data
+        const { name, email, uuid } = data
         console.log(data);
 
         try {
@@ -33,11 +33,11 @@ module.exports = {
                 from: "The Division Code",
                 to: email,
                 subject: "confirma tu cuenta",
-                text: "confirma tu cuenta proyect manager",
+                text: "confirma tu cuenta",
                 html: `
-<p> Hola ${name}, para confirmar tu cuenta hacé click en el siguiente enlace</p>
-<a href="${process.env.URL_FRONT}/confirm/${token}">Confirmá tu cuenta</a>
-`
+                <p> Hola ${name}, para confirmar tu cuenta hacé click en el siguiente enlace</p>
+                <a href="${process.env.API_FRONTEND}/confirm/${uuid}">Confirmá tu cuenta</a>
+                `
             })
             console.log(infoMail);
         } catch (error) {
@@ -45,19 +45,18 @@ module.exports = {
         }
     },
     forgotPassword: async (data) => {
-        const { name, email, token } = data
-
-        console.log(data);
+        const { name, email, uuid } = data
         try {
             const infoMail = await transport.sendMail({
                 from: "The Division Code",
                 to: email,
-                subject: "reestablecé tu contaseña",
-                text: "reestablecé tu contraseña en  proyect manager",
+                subject: "Reestablecé tu contaseña",
+                text: "reestablecé tu contraseña",
                 html: `
-<p> Hola ${name}, para reestablecer tu contraseña hacé click en el siguiente enlace</p>
-<a href="${process.env.URL_FRONT}/recover-password/${token}">Confirmá tu cuenta</a>
-`
+                <p>Hola ${name},</p>
+                <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
+                <a href="${process.env.API_FRONTEND}/recover-password/${uuid}">Restablecer contraseña</a>
+                `
             })
             console.log(infoMail);
         } catch (error) {
