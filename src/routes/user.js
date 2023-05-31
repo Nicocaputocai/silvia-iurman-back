@@ -2,7 +2,15 @@ const {Router} = require('express');
 
 const router = Router();
 
-const {loginUser, registerUser, reloggedUser, updateUser, confirmAccount, sendTokenRecovery, recoveryPassword} = require('../controllers/UserController');
+const {
+    loginUser, 
+    registerUser, 
+    reloggedUser, 
+    updateUser, 
+    confirmAccount, 
+    sendTokenRecovery, 
+    recoveryPassword,
+    googleLogin} = require('../controllers/UserController');
 
 const { getErrors, checkUserLogged  } = require('../middlewares');
 
@@ -16,5 +24,6 @@ router
 .get('/confirm/:uuid', confirmAccount)
 .post('/recovery',sendTokenRecovery)
 .post('/recovery-password',recoveryPassword)
+.post('/google-login', googleLogin)
 
 module.exports = router;

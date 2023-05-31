@@ -220,10 +220,7 @@ module.exports = {
             ok: true,
             msg: 'Se ha enviado un email con instrucciones'
         })
-        //el link del email enviado redirige a la vista de recuperacion
-        //desde el front se recibe la nueva contraseña en el body y el uuid en params
-        //se verifican si existe el usuario con ese uuid y se actualiza la contraseña
-        // se redirige al login
+        
     },
     recoveryPassword: async (req,res) =>{
         const {password, uuid} = req.body;
@@ -249,5 +246,75 @@ module.exports = {
             })
         } 
     
+    },
+    googleLogin:async (req,res) =>{
+        let user = await User.findOne({email: req.body.email});
+
+        if(user){
+            if(user.google){
+                return res.status(200).json({
+                    ok: true,
+                    msg: 'Usuario logueado',
+                    user: {
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        country: user.country,
+                        dateOfBirth: user.dateOfBirth,
+                        phone: user.phone,
+                        name: user.username,
+                        email: user.email,
+                        role: user.role,
+                        avatar: user.avatar,
+                        activity: user.activity,
+                        courses: user.courses, 
+                        modules: user.modules,
+                    },
+                    token: JWTGenerator({
+                        id: user._id
+                    })
+                })
+            }
+            return res.status(400).json({
+                ok: false,
+                msg: 'No es una cuenta de Google'
+            })
+        }
+        const data = {
+            firstName:req.body.displayName?.split(' ')[0],
+            lastName:req.body.displayName?.split(' ')[1],
+            phone: req.body.phoneNumber && String(req.body.phoneNumber),
+            username:req.body.email?.split('@')[0],
+            email: req.body.email,
+            password: generateToken(),
+            google: true,
+            avatar: req.body.photoURL,
+            confirmed:true,
+            uuid: generateToken(),
+        }
+        user = new User(data);
+
+        await user.save();
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'Usuario logueado',
+            user: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                country: user.country,
+                dateOfBirth: user.dateOfBirth,
+                phone: user.phone,
+                name: user.username,
+                email: user.email,
+                role: user.role,
+                avatar: user.avatar,
+                activity: user.activity,
+                courses: user.courses, 
+                modules: user.modules,
+            },
+            token: JWTGenerator({
+                id: user._id
+            })
+        })
     }
 }
