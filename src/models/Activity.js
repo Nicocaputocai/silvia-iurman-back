@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { REF } = require('../types/types');
+const { toString } = require('express-validator/src/utils');
 
 const ActivitySchema = new mongoose.Schema({
     day:{
@@ -36,7 +38,18 @@ const ActivitySchema = new mongoose.Schema({
     archived:{
         type: Boolean,
         default: 0
-    }
+    },
+    associate: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: 'associateModel',
+      },
+    associateModel: {
+        type: String,
+        enum: [
+            REF.COURSE,
+            REF.MODULE,
+        ],
+    },
 },{
     timestamps:true
 });

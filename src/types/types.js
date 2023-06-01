@@ -14,8 +14,8 @@ const REF = Object.freeze({
 });
 
 const TYPEMODULE = Object.freeze({
-    PRESENCIAL: 'presencial',
-    VIRTUAL: 'virtual',
+    ASINCRONICO: 'asincronico',
+    SINCRONICO: 'sincronico',
 });
 
 const TYPETOPAY = Object.freeze({

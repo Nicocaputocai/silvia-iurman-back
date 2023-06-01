@@ -9,7 +9,7 @@ const ModuleSchema = new mongoose.Schema({
     typeModule:{
         type: String,
         required: true,
-        enum:[TYPEMODULE.PRESENCIAL, TYPEMODULE.VIRTUAL]
+        enum:[TYPEMODULE.SINCRONICO, TYPEMODULE.ASINCRONICO]
     },
     link_intro:{
         type: String,
@@ -35,15 +35,7 @@ const ModuleSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    priceAnticipedPesos:{
-        type: Number,
-        required: true
-    },
     priceDolar:{
-        type: Number,
-        required: true
-    },
-    priceAnticipedDolar:{
         type: Number,
         required: true
     },

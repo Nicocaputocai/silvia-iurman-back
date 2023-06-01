@@ -12,14 +12,8 @@ module.exports = {
     },
     create:function(req,res){
         const data = {
-            day: req.body.day,
-            title: req.body.title,
-            description: req.body.description,
-            price: req.body.price,
+            ...req.body,
             img: (req.files[0])?req.files[0].filename: "",
-            modality: req.body.modality,
-            city: req.body.city,
-            important: req.body.important,
         };
         const newActiviy = new Activity(data);
         newActiviy.save()

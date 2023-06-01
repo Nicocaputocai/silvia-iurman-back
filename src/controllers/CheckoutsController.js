@@ -52,13 +52,13 @@ module.exports = {
                 init_url
             })
         } catch (error) {
+            console.log(error);
             if(error.status !== 500){
-                return res.status(error.status).json({
+                return res.status(400).json({
                     ok: false,
                     msg: error.message || 'upss, hubo un error'
                 })
             }
-            console.log(error);
             return res.status(500).json({
                 ok: false,
                 msg: 'Contacte al administrador'
