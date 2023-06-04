@@ -23,6 +23,8 @@ module.exports = {
           }
         try {
             const user = await User.findById(req.user._id);
+            const module = await Module.findById(idPurchase);
+
             if(user.activity.includes(idPurchase)){
                 return res.status(400).json({
                     ok: false,
@@ -31,18 +33,27 @@ module.exports = {
             }
 
             if(user.modules.includes(idPurchase)){
-                console.log('Ya esta inscripto a esta actividad');
                 return res.status(400).json({
                     ok: false,
                     msg: 'Ya esta inscripto a este modulo'
                 })
             }
 
+            const existingModule = user.modules.find(async moduleId => {
+                const purchasedModule = await Module.findById(moduleId);
+                return purchasedModule && purchasedModule.id_module === module.id_module;
+            });
+            if (existingModule) {
+                return res.status(400).json({
+                  ok: false,
+                  msg: 'No puedes comprar el mismo módulo en directo y grabado'
+                });
+            }
+
             if(user.courses.includes(idPurchase)){
-                console.log('Ya esta inscripto a esta actividad');
                 return res.status(400).json({
                     ok: false,
-                    msg: 'Ya esta inscripto a este modulo'
+                    msg: 'Ya esta inscripto a este Taller'
                 })
             }
 

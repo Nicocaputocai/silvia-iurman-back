@@ -156,7 +156,10 @@ module.exports = {
                 country,
                 firstName,
                 lastName,
-                phone},{new: true});
+                phone},{new: true})
+                .populate('activity')
+                .populate('courses')
+                .populate('modules');
 
             return res.status(200).json({
                 ok: true,

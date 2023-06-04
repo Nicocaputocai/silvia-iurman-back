@@ -15,7 +15,11 @@ const ActivitySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    price:{
+    pricePesos:{
+        type: String,
+        required: true
+    },
+    priceDolar:{
         type: String,
         required: true
     },

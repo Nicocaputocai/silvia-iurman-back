@@ -55,6 +55,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    
     activity: [
         {
             type: mongoose.Schema.Types.ObjectId,

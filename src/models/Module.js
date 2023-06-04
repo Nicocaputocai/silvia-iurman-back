@@ -31,6 +31,9 @@ const ModuleSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    id_module:{
+        type:Number,
+    },
     pricePesos:{
         type: Number,
         required: true

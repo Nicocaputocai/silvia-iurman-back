@@ -27,7 +27,8 @@ module.exports = {
             pricePesos:req.body.pricePesos,
             priceAnticipedPesos:req.body.priceAnticipedPesos,
             priceDolar:req.body.priceDolar,
-            priceAnticipedPesos: req.body.priceAnticipedPesos
+            priceAnticipedPesos: req.body.priceAnticipedPesos,
+            id_module:req.body.id_module
         }
 
         const newModule = new Module(data);
