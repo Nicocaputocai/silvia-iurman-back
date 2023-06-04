@@ -7,7 +7,7 @@ const {checkoutMP, checkoutPaypal} = require('../helpers');
 const mercadopago = require('mercadopago');
 const { getOrderPaypal } = require('../helpers/paypal');
 const  mongoose  = require('mongoose');
-const { TYPETOPAY, REF } = require('../types/types');
+const { TYPETOPAY, REF, TYPEMODULE } = require('../types/types');
 const { emailInscriptionAdmin, emailInscriptionUser } = require('../helpers/sendMails');
 
 module.exports = {
@@ -71,7 +71,11 @@ module.exports = {
             
             const { body } = await mercadopago.payment.get(id);
             
-            const user = await User.findById(req.user._id);
+            const user = await User.findById(req.user._id)
+            .populate('activity')
+            .populate('courses')
+            .populate('modules');
+
             if (!user) {
                 return res.status(400).json({
                     ok: false,
@@ -124,8 +128,15 @@ module.exports = {
                     inscription: idPurchase,
                     inscriptionModel: REF.MODULE,
                     pay: true,
+                    
                 });
 
+                const module = await Module.findById(idPurchase)
+
+                if(module.typeModule === TYPEMODULE.ASINCRONICO){
+                    purchase.finish = true;
+                }
+                
                 await purchase.save();
 
                 await emailInscriptionUser({
