@@ -95,5 +95,6 @@ module.exports = {
             req.body.err = err ;
             next();
         })
-    }
+    },
+
 }

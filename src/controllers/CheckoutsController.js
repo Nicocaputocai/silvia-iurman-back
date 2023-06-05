@@ -132,6 +132,21 @@ module.exports = {
                 })
             } else if (type === REF.MODULE){
                 user.modules = [...user.modules, idPurchase];
+                let finishedModules = 0;
+                const purchasesOfUser = await Purchase.find(
+                    {
+                        user_id: user._id,
+                        inscriptionModel: REF.MODULE,
+                    });
+                
+                purchasesOfUser.forEach(purchase => {
+                    if(purchase.finish){
+                        finishedModules++;
+                    }
+                });
+                if(finishedModules === 16){
+                    user.constellator = true;
+                }
                 await user.save();
                 const purchase = new Purchase({
                     user_id: user._id,

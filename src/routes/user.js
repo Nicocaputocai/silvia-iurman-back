@@ -10,7 +10,8 @@ const {
     confirmAccount, 
     sendTokenRecovery, 
     recoveryPassword,
-    googleLogin} = require('../controllers/UserController');
+    googleLogin,
+    getConstellators} = require('../controllers/UserController');
 
 const { getErrors, checkUserLogged  } = require('../middlewares');
 
@@ -25,5 +26,6 @@ router
 .post('/recovery',sendTokenRecovery)
 .post('/recovery-password',recoveryPassword)
 .post('/google-login', googleLogin)
+.get('/constellators', getConstellators)
 
 module.exports = router;

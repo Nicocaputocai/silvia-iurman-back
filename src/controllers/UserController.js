@@ -2,6 +2,9 @@ const User = require("../models/User");
 const createError = require('http-errors');
 const {errorResponse, JWTGenerator, generateToken } = require('../helpers');
 const { confirmRegister, forgotPassword } = require("../helpers/sendMails");
+const { request } = require("express");
+const Purchase = require("../models/Purchase");
+const { REF } = require("../types/types");
 
 module.exports = {
     getAll: async(req,res) =>{
@@ -319,5 +322,32 @@ module.exports = {
                 id: user._id
             })
         })
+    },
+    async getConstellators(req,res){
+        const constellators = await User.find({constellator:true})
+        const purchasesOfConstellators = [];
+        if(constellators.length === 0){
+            return res.status(200).json({
+                ok: true,
+                msg: 'No hay consteladores',
+                constellators: []
+            })
+        }
+        constellators.forEach(async (user)=>{ 
+            let purchases = await Purchase.find({
+                user_id: user._id,
+                inscriptionModel: REF.MODULE
+            })
+            .populate('inscriptionModel')
+            .populate('user_id');
+
+            purchasesOfConstellators = [...purchasesOfConstellators, ...purchases]
+        })
+        return res.status(200).json({
+            ok: true,
+            msg: 'Consteladores',
+            purchasesOfConstellators,
+        })
+
     }
 }
