@@ -325,7 +325,7 @@ module.exports = {
     },
     async getConstellators(req,res){
         const constellators = await User.find({constellator:true})
-        const purchasesOfConstellators = [];
+        /* const purchasesOfConstellators = []; */
         if(constellators.length === 0){
             return res.status(200).json({
                 ok: true,
@@ -333,7 +333,7 @@ module.exports = {
                 constellators: []
             })
         }
-        constellators.forEach(async (user)=>{ 
+        /* constellators.forEach(async (user)=>{ 
             let purchases = await Purchase.find({
                 user_id: user._id,
                 inscriptionModel: REF.MODULE
@@ -342,11 +342,11 @@ module.exports = {
             .populate('user_id');
 
             purchasesOfConstellators = [...purchasesOfConstellators, ...purchases]
-        })
+        }) */
         return res.status(200).json({
             ok: true,
             msg: 'Consteladores',
-            purchasesOfConstellators,
+            constellators,
         })
 
     }
