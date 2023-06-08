@@ -17,6 +17,7 @@ module.exports = {
     },
     create:async(req,res)=>{
         const data = {
+<<<<<<< HEAD
             title: req.body.title,
             typeModule :req.body.type,
             link_intro: req.body.link_intro,
@@ -28,6 +29,20 @@ module.exports = {
             priceAnticipedPesos: req.body.priceAnticipedPesos,
             priceDolar: req.body.priceDolar,
             priceAnticipedPesos: req.body.priceAnticipedPesos
+=======
+            title:req.body.title,
+            typeModule:req.body.type,
+            link_intro:req.body.link_intro,
+            link:req.body.link,
+            date:req.body.date,
+            enabled:req.body.enabled,
+            open:req.body.open,
+            pricePesos:req.body.pricePesos,
+            priceAnticipedPesos:req.body.priceAnticipedPesos,
+            priceDolar:req.body.priceDolar,
+            priceAnticipedPesos: req.body.priceAnticipedPesos,
+            id_module:req.body.id_module
+>>>>>>> dev
         }
 
         const newModule = new Module(data);

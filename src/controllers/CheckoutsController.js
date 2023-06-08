@@ -7,7 +7,7 @@ const {checkoutMP, checkoutPaypal} = require('../helpers');
 const mercadopago = require('mercadopago');
 const { getOrderPaypal } = require('../helpers/paypal');
 const  mongoose  = require('mongoose');
-const { TYPETOPAY, REF } = require('../types/types');
+const { TYPETOPAY, REF, TYPEMODULE } = require('../types/types');
 const { emailInscriptionAdmin, emailInscriptionUser } = require('../helpers/sendMails');
 
 module.exports = {
@@ -23,6 +23,8 @@ module.exports = {
           }
         try {
             const user = await User.findById(req.user._id);
+            const module = await Module.findById(idPurchase);
+
             if(user.activity.includes(idPurchase)){
                 return res.status(400).json({
                     ok: false,
@@ -31,18 +33,27 @@ module.exports = {
             }
 
             if(user.modules.includes(idPurchase)){
-                console.log('Ya esta inscripto a esta actividad');
                 return res.status(400).json({
                     ok: false,
                     msg: 'Ya esta inscripto a este modulo'
                 })
             }
 
+            const existingModule = user.modules.find(async moduleId => {
+                const purchasedModule = await Module.findById(moduleId);
+                return purchasedModule && purchasedModule.id_module === module.id_module;
+            });
+            if (existingModule) {
+                return res.status(400).json({
+                  ok: false,
+                  msg: 'No puedes comprar el mismo módulo en directo y grabado'
+                });
+            }
+
             if(user.courses.includes(idPurchase)){
-                console.log('Ya esta inscripto a esta actividad');
                 return res.status(400).json({
                     ok: false,
-                    msg: 'Ya esta inscripto a este modulo'
+                    msg: 'Ya esta inscripto a este Taller'
                 })
             }
 
@@ -71,7 +82,11 @@ module.exports = {
             
             const { body } = await mercadopago.payment.get(id);
             
-            const user = await User.findById(req.user._id);
+            const user = await User.findById(req.user._id)
+            .populate('activity')
+            .populate('courses')
+            .populate('modules');
+
             if (!user) {
                 return res.status(400).json({
                     ok: false,
@@ -117,6 +132,21 @@ module.exports = {
                 })
             } else if (type === REF.MODULE){
                 user.modules = [...user.modules, idPurchase];
+                let finishedModules = 0;
+                const purchasesOfUser = await Purchase.find(
+                    {
+                        user_id: user._id,
+                        inscriptionModel: REF.MODULE,
+                    });
+                
+                purchasesOfUser.forEach(purchase => {
+                    if(purchase.finish){
+                        finishedModules++;
+                    }
+                });
+                if(finishedModules === 16){
+                    user.constellator = true;
+                }
                 await user.save();
                 const purchase = new Purchase({
                     user_id: user._id,
@@ -124,8 +154,15 @@ module.exports = {
                     inscription: idPurchase,
                     inscriptionModel: REF.MODULE,
                     pay: true,
+                    
                 });
 
+                const module = await Module.findById(idPurchase)
+
+                if(module.typeModule === TYPEMODULE.ASINCRONICO){
+                    purchase.finish = true;
+                }
+                
                 await purchase.save();
 
                 await emailInscriptionUser({

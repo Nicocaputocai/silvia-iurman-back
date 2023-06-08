@@ -55,6 +55,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    constellator:{
+        type: Boolean,
+        default: false
+    },
     activity: [
         {
             type: mongoose.Schema.Types.ObjectId,
