@@ -97,6 +97,9 @@ module.exports = {
             if(!await userDB.checkedPassword(password)){
                 throw createError(400, 'Usuario o contraseña incorrectos')
             }
+            const token = JWTGenerator({
+                id: userDB._id
+            })
             return res.status(200).json({
                 ok: true,
                 msg: 'Usuario logueado',
@@ -114,9 +117,7 @@ module.exports = {
                     courses: userDB.courses, 
                     modules: userDB.modules,
                 },
-                token: JWTGenerator({
-                    id: userDB._id
-                })
+                token
             })
         } catch (error) {
             console.log(error);

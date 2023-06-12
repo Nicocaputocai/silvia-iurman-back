@@ -8,7 +8,6 @@ module.exports = async(req,res,next) => {
         return res.status(401).json({message:'Se require un token para acceder a este recurso'});
     }
     const token = req.headers.authorization;
-
     try {
         const decoded = verify(token, process.env.TOKEN);
         if(!decoded){
