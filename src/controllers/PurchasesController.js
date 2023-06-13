@@ -36,7 +36,12 @@ module.exports = {
     show: function(req,res){
         let idPurchase = req.params._id
 
-        Purchase.findById(idPurchase).exec((err, purchase) =>{
+        Purchase.findById(idPurchase).populate({
+            path: 'user_id',
+        })
+        .populate({
+            path: 'inscription'
+        }).exec((err, purchase) =>{
         if(req.body.err) return res.status(500).send({err});
         if(req.body.purchase){
             return res.status(200).send({purchase})
