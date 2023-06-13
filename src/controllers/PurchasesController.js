@@ -38,6 +38,7 @@ module.exports = {
 
         Purchase.findById(idPurchase).populate({
             path: 'user_id',
+            select: '-password'
         })
         .populate({
             path: 'inscription'
