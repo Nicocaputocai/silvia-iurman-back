@@ -5,6 +5,8 @@ const { confirmRegister, forgotPassword } = require("../helpers/sendMails");
 const { request } = require("express");
 const Purchase = require("../models/Purchase");
 const { REF } = require("../types/types");
+const jwt = require('jsonwebtoken');
+const config = require('../config/config');
 
 module.exports = {
     getAll: async(req,res) =>{
@@ -98,7 +100,7 @@ module.exports = {
                 throw createError(400, 'Usuario o contraseña incorrectos')
             }
             const token = JWTGenerator({
-                id: userDB._id
+                id: userDB._id,
             })
             return res.status(200).json({
                 ok: true,
@@ -126,6 +128,9 @@ module.exports = {
     },
     reloggedUser: async(req,res) =>{
         try {
+            const token = JWTGenerator({
+                id: req.user._id
+            })
             return res.status(200).json({
                 ok: true,
                 msg: 'Usuario logueado',
@@ -143,9 +148,7 @@ module.exports = {
                     courses: req.user.courses, 
                     modules: req.user.modules,
                 },
-                token: JWTGenerator({
-                    id: req.user._id
-                })
+                token
             })
         } catch(error) {
             return errorResponse(res,error, "Error en el login");
