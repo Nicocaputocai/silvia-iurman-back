@@ -101,6 +101,7 @@ module.exports = {
                 ok: true,
                 msg: 'Usuario logueado',
                 user: {
+                    _id: userDB._id,
                     firstName: userDB.firstName,
                     lastName: userDB.lastName,
                     country: userDB.country,
@@ -129,6 +130,7 @@ module.exports = {
                 ok: true,
                 msg: 'Usuario logueado',
                 user: {
+                    _id: req.user._id,
                     firstName: req.user.firstName,
                     lastName: req.user.lastName,
                     country: req.user.country,
