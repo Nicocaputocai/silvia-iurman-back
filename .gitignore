@@ -14,8 +14,6 @@ pnpm-lock.yaml
 # env
 .env
 
-package-lock.json
-
 # misc
 .DS_Store
 .env.local
