@@ -39,7 +39,7 @@ module.exports = {
                 })
             }
 
-            const existingModule = user.modules.find(async moduleId => {
+            /* const existingModule = user.modules.find(async moduleId => {
                 const purchasedModule = await Module.findById(moduleId);
                 return purchasedModule && purchasedModule.id_module === module.id_module;
             });
@@ -48,7 +48,18 @@ module.exports = {
                   ok: false,
                   msg: 'No puedes comprar el mismo módulo en directo y grabado'
                 });
-            }
+            } */
+            const existingModule = await Module.findOne({
+                id_module: module.id_module,
+                _id: { $in: user.modules }
+              });
+              
+              if (existingModule) {
+                return res.status(400).json({
+                  ok: false,
+                  msg: 'No puedes comprar el mismo módulo en directo y grabado'
+                });
+              }
 
             if(user.courses.includes(idPurchase)){
                 return res.status(400).json({
@@ -256,7 +267,7 @@ module.exports = {
                 })
             }
 
-            const existingModule = user.modules.find(async moduleId => {
+            /* const existingModule = user.modules.find(async moduleId => {
                 const purchasedModule = await Module.findById(moduleId);
                 return purchasedModule && purchasedModule.id_module === module.id_module;
             });
@@ -265,8 +276,20 @@ module.exports = {
                   ok: false,
                   msg: 'No puedes comprar el mismo módulo en directo y grabado'
                 });
-            }
+            } */
 
+            const existingModule = await Module.findOne({
+                id_module: module.id_module,
+                _id: { $in: user.modules }
+              });
+              
+              if (existingModule) {
+                return res.status(400).json({
+                  ok: false,
+                  msg: 'No puedes comprar el mismo módulo en directo y grabado'
+                });
+              }
+              
             if(user.courses.includes(idPurchase)){
                 return res.status(400).json({
                     ok: false,

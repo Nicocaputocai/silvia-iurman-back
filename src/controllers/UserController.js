@@ -5,6 +5,8 @@ const { confirmRegister, forgotPassword } = require("../helpers/sendMails");
 const { request } = require("express");
 const Purchase = require("../models/Purchase");
 const { REF } = require("../types/types");
+const jwt = require('jsonwebtoken');
+const config = require('../config/config');
 
 module.exports = {
     getAll: async(req,res) =>{
@@ -97,6 +99,9 @@ module.exports = {
             if(!await userDB.checkedPassword(password)){
                 throw createError(400, 'Usuario o contraseña incorrectos')
             }
+            const token = JWTGenerator({
+                id: userDB._id,
+            })
             return res.status(200).json({
                 ok: true,
                 msg: 'Usuario logueado',
@@ -114,9 +119,7 @@ module.exports = {
                     courses: userDB.courses, 
                     modules: userDB.modules,
                 },
-                token: JWTGenerator({
-                    id: userDB._id
-                })
+                token
             })
         } catch (error) {
             console.log(error);
@@ -125,6 +128,9 @@ module.exports = {
     },
     reloggedUser: async(req,res) =>{
         try {
+            const token = JWTGenerator({
+                id: req.user._id
+            })
             return res.status(200).json({
                 ok: true,
                 msg: 'Usuario logueado',
@@ -142,24 +148,30 @@ module.exports = {
                     courses: req.user.courses, 
                     modules: req.user.modules,
                 },
-                token: JWTGenerator({
-                    id: req.user._id
-                })
+                token
             })
         } catch(error) {
             return errorResponse(res,error, "Error en el login");
         }
     },
     updateUser: async(req,res) =>{
-        const {birthday, country, firstName, lastName, phone} = req.body;
-
+        const {birthday, country, firstName, lastName, phone, _id} = req.body;
+        let idUser = req.params._id;
+        let image = req.files[0] ? req.files[0].filename : req.body.avatar;
+        const user = await User.findById(idUser)
+        if(user.avatar != image && user.avatar != ""){
+            deleteFile(user.avatar)
+        }
+        console.log(req.body);
         try {
             const user = await User.findByIdAndUpdate(req.user._id,{
                 dateOfBirth: birthday,
                 country,
                 firstName,
                 lastName,
-                phone},{new: true})
+                phone,
+                avatar: image
+            },{new: true})
                 .populate('activity')
                 .populate('courses')
                 .populate('modules');
@@ -175,6 +187,7 @@ module.exports = {
                     phone: user.phone,
                     name: user.username,
                     email: user.email,
+                    avatar: user.avatar,
                     role: user.role,
                     avatar: user.avatar,
                     activity: user.activity,
