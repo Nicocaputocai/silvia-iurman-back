@@ -1,5 +1,5 @@
 const {Router} = require('express');
-
+const uploadImg = require('../middlewares/uploadImg');
 const router = Router();
 
 const {
@@ -21,7 +21,7 @@ router
 .post('/login',loginValidation, getErrors, loginUser)
 .post('/register',registerValidation, getErrors, registerUser)
 .get('/relogged', checkUserLogged ,reloggedUser)
-.put('/update-user', checkUserLogged ,updateUser)
+.put('/update-user', uploadImg.any(), checkUserLogged, updateUser)
 .get('/confirm/:uuid', confirmAccount)
 .post('/recovery',sendTokenRecovery)
 .post('/recovery-password',recoveryPassword)

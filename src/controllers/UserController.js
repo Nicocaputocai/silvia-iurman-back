@@ -155,15 +155,23 @@ module.exports = {
         }
     },
     updateUser: async(req,res) =>{
-        const {birthday, country, firstName, lastName, phone} = req.body;
-
+        const {birthday, country, firstName, lastName, phone, _id} = req.body;
+        let idUser = req.params._id;
+        let image = req.files[0] ? req.files[0].filename : req.body.avatar;
+        const user = await User.findById(idUser)
+        if(user.avatar != image && user.avatar != ""){
+            deleteFile(user.avatar)
+        }
+        console.log(req.body);
         try {
             const user = await User.findByIdAndUpdate(req.user._id,{
                 dateOfBirth: birthday,
                 country,
                 firstName,
                 lastName,
-                phone},{new: true})
+                phone,
+                avatar: image
+            },{new: true})
                 .populate('activity')
                 .populate('courses')
                 .populate('modules');
@@ -179,6 +187,7 @@ module.exports = {
                     phone: user.phone,
                     name: user.username,
                     email: user.email,
+                    avatar: user.avatar,
                     role: user.role,
                     avatar: user.avatar,
                     activity: user.activity,
