@@ -55,7 +55,7 @@ module.exports = {
             email: req.body.email,
             phone: req.body.phone,
             wayToPay: req.body.wayToPay,
-            pay: req.body.pay,
+            /* pay: req.body.pay, */
             finish: req.body.finish,
             inscription: req.body.inscription,
         };

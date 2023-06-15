@@ -97,5 +97,58 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+    },
+    transferPayUser: async (data) => {
+        const { email, purchase, price } = data
+        try {
+            const infoMail = await transport.sendMail({
+                from: "The Division Code",
+                to: email,
+                subject: "Inscripción pendiente",
+                text: "Inscripción pendiente",
+                html: `
+                <p>Estimado/a ${email},</p>
+                    <p>Gracias por tu compra. A continuación, te proporcionamos los detalles para realizar una transferencia bancaria:</p>
+                    <ul>
+                        <li>Monto: $${price}</li>
+                        <li>CBU: 1234567890123456789012</li>
+                        <li>Titular: Nombre del Titular</li>
+                        <li>CUIT: 12-34567890-1</li>
+                    </ul>
+                    <p>Por favor, realiza la transferencia a la cuenta indicada y asegúrate de incluir tu ID de compra (${purchase}) en el concepto de la transferencia.</p>
+                    <p>Una vez que hayamos recibido la transferencia, procesaremos tu inscripción y te enviaremos más detalles.</p>
+                    <p>¡Gracias por tu atención!</p>
+                `
+            })
+            console.log(infoMail);
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    transferPayAdmin: async (data) => {
+        const { email, purchase, price } = data
+        try {
+            const infoMail = await transport.sendMail({
+                from: "The Division Code",
+                to: process.env.MAIL_ADMIN,
+                subject: "Inscripción pendiente",
+                text: "Inscripción pendiente",
+                html:`
+                    <p>Estimado administrador,</p>
+                    <p>Se ha recibido un pago por parte del usuario ${email}.</p>
+                    <p>Detalles del pago:</p>
+                    <ul>
+                        <li>Usuario: ${email}</li>
+                        <li>Monto: ${price}</li>
+                        <li>Recurso: ${purchase}</li>
+                    </ul>
+                    <p>Por favor, verifica el pago y realiza las acciones necesarias para completar la inscripción.</p>
+                    <p>¡Gracias por tu atención!</p>
+                    `
+            })
+            console.log(infoMail);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
