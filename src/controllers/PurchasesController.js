@@ -33,10 +33,10 @@ module.exports = {
         .then(purchase => res.status(201).send({purchase}))
         .catch(err => res.status(500).send({err}))
     },
-    show: function(req,res){
+show: function(req,res){
         let idPurchase = req.params._id
 
-        Purchase.findById(idPurchase).populate({
+        Purchase.findById(idPurchase) .populate({
             path: 'user_id',
             select: '-password'
         })
