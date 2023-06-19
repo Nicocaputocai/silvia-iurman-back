@@ -155,7 +155,7 @@ module.exports = {
         }
     },
     updateUser: async(req,res) =>{
-        const {birthday, country, firstName, lastName, phone, _id} = req.body;
+        const {birthday, country, firstName, lastName, phone, _id, avatar} = req.body;
         let idUser = req.params._id;
         let image = req.files[0] ? req.files[0].filename : req.body.avatar;
         const user = await User.findById(idUser)

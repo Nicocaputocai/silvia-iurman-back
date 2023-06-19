@@ -21,7 +21,7 @@ router
 .post('/login',loginValidation, getErrors, loginUser)
 .post('/register',registerValidation, getErrors, registerUser)
 .get('/relogged', checkUserLogged ,reloggedUser)
-.put('/update-user', uploadImg.any(), checkUserLogged, updateUser)
+.put('/update-user', checkUserLogged, uploadImg.any(), updateUser)
 .get('/confirm/:uuid', confirmAccount)
 .post('/recovery',sendTokenRecovery)
 .post('/recovery-password',recoveryPassword)
