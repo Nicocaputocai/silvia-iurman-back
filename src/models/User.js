@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: '/public/img/default_avatar.webp'
+        default: 'default_avatar.webp'
     },
     confirmed:{
         type: Boolean,
