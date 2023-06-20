@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const createError = require('http-errors');
-const {errorResponse, JWTGenerator, generateToken } = require('../helpers');
+const {errorResponse, JWTGenerator, generateToken, deleteFile } = require('../helpers');
 const { confirmRegister, forgotPassword } = require("../helpers/sendMails");
 const { request } = require("express");
 const Purchase = require("../models/Purchase");
@@ -155,14 +155,7 @@ module.exports = {
         }
     },
     updateUser: async(req,res) =>{
-        const {birthday, country, firstName, lastName, phone, _id} = req.body;
-        let idUser = req.params._id;
-        let image = req.files[0] ? req.files[0].filename : req.body.avatar;
-        const user = await User.findById(idUser)
-        if(user.avatar != image && user.avatar != ""){
-            deleteFile(user.avatar)
-        }
-        console.log(req.body);
+        const {birthday, country, firstName, lastName, phone} = req.body
         try {
             const user = await User.findByIdAndUpdate(req.user._id,{
                 dateOfBirth: birthday,
@@ -170,7 +163,7 @@ module.exports = {
                 firstName,
                 lastName,
                 phone,
-                avatar: image
+                /* avatar: image */
             },{new: true})
                 .populate('activity')
                 .populate('courses')
@@ -201,6 +194,31 @@ module.exports = {
         } catch (error){
             console.log(error);
         }
+    },
+    updateProfileImage: async(req,res) =>{
+        try {
+            const user = await User.findById(req.user._id)
+            .populate('activity')
+            .populate('courses')
+            .populate('modules');
+            if(user.avatar != "" && user.avatar != null && user.avatar != 'default_avatar.webp'){
+                deleteFile(user.avatar)
+            }
+            user.avatar = req.file.filename;
+            await user.save();
+            return res.status(200).json({
+                ok:true,
+                msg: 'Imagen actualizada',
+                avatar: user.avatar 
+            })
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({
+                ok: false,
+                msg: 'Error al actualizar la imagen'
+            })
+        }
+
     },
     confirmAccount: async(req,res) =>{
         const {uuid} = req.params;
