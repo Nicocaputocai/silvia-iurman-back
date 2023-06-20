@@ -359,13 +359,6 @@ module.exports = {
     async getConstellators(req,res){
         const constellators = await User.find({constellator:true})
         /* const purchasesOfConstellators = []; */
-        if(constellators.length === 0){
-            return res.status(200).json({
-                ok: true,
-                msg: 'No hay consteladores',
-                constellators: []
-            })
-        }
         /* constellators.forEach(async (user)=>{ 
             let purchases = await Purchase.find({
                 user_id: user._id,
