@@ -27,10 +27,10 @@ const checkoutPaypal = async (items) => {
         intent: "CAPTURE", 
         purchase_units: [ 
             { 
-                reference_id: '123', 
+                reference_id: items._id, 
                 amount: { 
                     currency_code: "USD", 
-                    value: '5' 
+                    value: items.priceDolar ? items.priceDolar : items.price,
                 },
             } 
         ], 
@@ -57,6 +57,7 @@ const checkoutPaypal = async (items) => {
 
         return result.data.links[1].href
     } catch (error) {
+        console.log(error)
     }
 }
 

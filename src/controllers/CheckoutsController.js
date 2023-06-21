@@ -13,6 +13,7 @@ const { emailInscriptionAdmin, emailInscriptionUser, transferPayUser, transferPa
 module.exports = {
     mercadoPago: async(req,res) =>{
         let {product, idPurchase, type} = req.body;
+        /* console.log(req.body)
         if (typeof idPurchase === 'string') {
             idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
           } else {
@@ -20,7 +21,7 @@ module.exports = {
               ok: false,
               msg: 'El valor de idPurchase no es un string',
             });
-          }
+          } */
         try {
             const user = await User.findById(req.user._id);
             const module = await Module.findById(idPurchase);
@@ -241,15 +242,15 @@ module.exports = {
     },
     paypal: async(req,res) =>{
         let {product, idPurchase, type} = req.body;
-        
-        if (typeof idPurchase === 'string') {
+
+        /* if (typeof idPurchase === 'string') {
             idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
           } else {
             return res.status(400).json({
               ok: false,
               msg: 'El valor de idPurchase no es un string',
             });
-          }
+          } */
   
         try {
             const user = await User.findById(req.user._id);
