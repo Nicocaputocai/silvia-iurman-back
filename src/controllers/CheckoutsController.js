@@ -12,7 +12,7 @@ const { emailInscriptionAdmin, emailInscriptionUser, transferPayUser, transferPa
 
 module.exports = {
     mercadoPago: async(req,res) =>{
-        let {product, idPurchase} = req.body;
+        let {product, idPurchase, type} = req.body;
         if (typeof idPurchase === 'string') {
             idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
           } else {
@@ -49,17 +49,19 @@ module.exports = {
                   msg: 'No puedes comprar el mismo módulo en directo y grabado'
                 });
             } */
-            const existingModule = await Module.findOne({
-                id_module: module.id_module,
-                _id: { $in: user.modules }
-              });
-              
-              if (existingModule) {
-                return res.status(400).json({
-                  ok: false,
-                  msg: 'No puedes comprar el mismo módulo en directo y grabado'
-                });
-              }
+            if(type === REF.MODULE){
+                const existingModule = await Module.findOne({
+                    id_module: module.id_module,
+                    _id: { $in: user.modules }
+                  });
+                  
+                  if (existingModule) {
+                    return res.status(400).json({
+                      ok: false,
+                      msg: 'No puedes comprar el mismo módulo en directo y grabado'
+                    });
+                  }
+            }
 
             if(user.courses.includes(idPurchase)){
                 return res.status(400).json({
@@ -238,7 +240,7 @@ module.exports = {
 
     },
     paypal: async(req,res) =>{
-        let {product, idPurchase} = req.body;
+        let {product, idPurchase, type} = req.body;
         
         if (typeof idPurchase === 'string') {
             idPurchase = mongoose.Types.ObjectId(idPurchase.replace(/"/g, ''));
@@ -266,18 +268,20 @@ module.exports = {
                     msg: 'Ya esta inscripto a este modulo'
                 })
             }
+            if(type === REF.MODULE){
 
-            const existingModule = await Module.findOne({
-                id_module: module.id_module,
-                _id: { $in: user.modules }
-              });
-              
-              if (existingModule) {
-                return res.status(400).json({
-                  ok: false,
-                  msg: 'No puedes comprar el mismo módulo en directo y grabado'
-                });
-              }
+                const existingModule = await Module.findOne({
+                    id_module: module.id_module,
+                    _id: { $in: user.modules }
+                  });
+                  
+                  if (existingModule) {
+                    return res.status(400).json({
+                      ok: false,
+                      msg: 'No puedes comprar el mismo módulo en directo y grabado'
+                    });
+                  }
+            }
               
             if(user.courses.includes(idPurchase)){
                 return res.status(400).json({
@@ -494,17 +498,20 @@ module.exports = {
                 })
             }
 
-            const existingModule = await Module.findOne({
-                id_module: module.id_module,
-                _id: { $in: user.modules }
-              });
-              
-              if (existingModule) {
-                return res.status(400).json({
-                  ok: false,
-                  msg: 'No puedes comprar el mismo módulo en directo y grabado'
-                });
-              }
+            if(type === REF.MODULE){
+                const existingModule = await Module.findOne({
+                    id_module: module.id_module,
+                    _id: { $in: user.modules }
+                  });
+                  
+                  if (existingModule) {
+                    return res.status(400).json({
+                      ok: false,
+                      msg: 'No puedes comprar el mismo módulo en directo y grabado'
+                    });
+                  }
+            }
+
               
             if(user.courses.includes(idPurchase)){
                 return res.status(400).json({
