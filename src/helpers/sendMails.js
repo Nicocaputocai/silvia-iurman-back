@@ -14,7 +14,7 @@ module.exports = {
     testEmail: async (data) => {
         const { name, email } = data
         const response = await transport.sendMail({
-            from: "The Division Code",
+            from: "The Division Code <adrian.gonzalez90@outlook.com.ar>",
             to: email,
             subject: "test",
             text: "test",
