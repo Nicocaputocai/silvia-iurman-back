@@ -14,7 +14,7 @@ module.exports = {
     testEmail: async (data) => {
         const { name, email } = data
         const response = await transport.sendMail({
-            from: "The Division Code",
+            from: `Silvia Iurman <${process.env.USER_MAIL}>`,
             to: email,
             subject: "test",
             text: "test",
@@ -30,7 +30,7 @@ module.exports = {
 
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
                 to: email,
                 subject: "confirma tu cuenta",
                 text: "confirma tu cuenta",
@@ -48,7 +48,7 @@ module.exports = {
         const { name, email, uuid } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
                 to: email,
                 subject: "Reestablecé tu contaseña",
                 text: "reestablecé tu contraseña",
@@ -67,7 +67,7 @@ module.exports = {
         const { name, email, purchase } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
                 to: email,
                 subject: "Inscripción exitosa",
                 text: "Inscripción exitosa",
@@ -85,7 +85,7 @@ module.exports = {
         const { email, purchase } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
                 to: process.env.MAIL_ADMIN,
                 subject: "Inscripción exitosa",
                 text: "Inscripción exitosa",
@@ -102,7 +102,7 @@ module.exports = {
         const { email, purchase, price } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
                 to: email,
                 subject: "Inscripción pendiente",
                 text: "Inscripción pendiente",
@@ -129,7 +129,7 @@ module.exports = {
         const { email, purchase, price } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
                 to: process.env.MAIL_ADMIN,
                 subject: "Inscripción pendiente",
                 text: "Inscripción pendiente",
