@@ -2,27 +2,32 @@ const nodemailer = require('nodemailer')
 
 // //PROBAR sendinblue https://es.sendinblue.com/
 const transport = nodemailer.createTransport({
-    host: process.env.HOST_MAIL,
-    port: process.env.PORT_MAIL,
+    host: String(process.env.HOST_MAIL),
+    port: Number(process.env.PORT_MAIL),
+    secure: false,
     auth: {
-        user: process.env.USER_MAIL,
-        pass: process.env.PASS_MAIL
+        user: String(process.env.USER_MAIL),
+        pass: String(process.env.PASS_MAIL)
     }
 });
 
 module.exports = {
     testEmail: async (data) => {
         const { name, email } = data
-        const response = await transport.sendMail({
-            from: `Silvia Iurman <${process.env.USER_MAIL}>`,
-            to: email,
-            subject: "test",
-            text: "test",
-            html: `
-                <p> Hola ${name}, este es un test</p>
-                    `
-        })
-        return response
+        try {
+            const response = await transport.sendMail({
+                from: `info@silviaiurman.com`,
+                to: email,
+                subject: "test",
+                text: "test",
+                html: `
+                    <p> Hola ${name}, este es un test</p>
+                        `
+            })
+            return response
+        } catch (error) {
+            console.log(error)
+        }
     },
     confirmRegister: async (data) => {
         const { name, email, uuid } = data
@@ -30,13 +35,15 @@ module.exports = {
 
         try {
             const infoMail = await transport.sendMail({
-                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
+                from: `info@silviaiurman.com`,
                 to: email,
                 subject: "confirma tu cuenta",
                 text: "confirma tu cuenta",
                 html: `
                 <p> Hola ${name}, para confirmar tu cuenta hacé click en el siguiente enlace</p>
                 <a href="${process.env.API_FRONTEND}/confirm/${uuid}">Confirmá tu cuenta</a>
+                <br/>
+                <p>Por favor no responda este correo</p>
                 `
             })
             console.log(infoMail);
@@ -48,7 +55,7 @@ module.exports = {
         const { name, email, uuid } = data
         try {
             const infoMail = await transport.sendMail({
-                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
+                from: `info@silviaiurman.com`,
                 to: email,
                 subject: "Reestablecé tu contaseña",
                 text: "reestablecé tu contraseña",
@@ -56,6 +63,8 @@ module.exports = {
                 <p>Hola ${name},</p>
                 <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
                 <a href="${process.env.API_FRONTEND}/recover-password/${uuid}">Restablecer contraseña</a>
+                <br/>
+                <p>Por favor no responda este correo</p>
                 `
             })
             console.log(infoMail);
@@ -67,7 +76,7 @@ module.exports = {
         const { name, email, purchase } = data
         try {
             const infoMail = await transport.sendMail({
-                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
+                from: `info@silviaiurman.com`,
                 to: email,
                 subject: "Inscripción exitosa",
                 text: "Inscripción exitosa",
@@ -85,7 +94,7 @@ module.exports = {
         const { email, purchase } = data
         try {
             const infoMail = await transport.sendMail({
-                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
+                from: `info@silviaiurman.com`,
                 to: process.env.MAIL_ADMIN,
                 subject: "Inscripción exitosa",
                 text: "Inscripción exitosa",
@@ -102,7 +111,7 @@ module.exports = {
         const { email, purchase, price } = data
         try {
             const infoMail = await transport.sendMail({
-                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
+                from: `info@silviaiurman.com`,
                 to: email,
                 subject: "Inscripción pendiente",
                 text: "Inscripción pendiente",
@@ -129,7 +138,7 @@ module.exports = {
         const { email, purchase, price } = data
         try {
             const infoMail = await transport.sendMail({
-                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
+                from: `info@silviaiurman.com`,
                 to: process.env.MAIL_ADMIN,
                 subject: "Inscripción pendiente",
                 text: "Inscripción pendiente",
