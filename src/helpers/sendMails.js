@@ -99,6 +99,7 @@ module.exports = {
         }
     },
     transferPayUser: async (data) => {
+        
         const { email, purchase, price } = data
         try {
             const infoMail = await transport.sendMail({
