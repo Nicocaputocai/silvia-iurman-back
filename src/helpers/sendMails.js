@@ -14,7 +14,7 @@ module.exports = {
     testEmail: async (data) => {
         const { name, email } = data
         const response = await transport.sendMail({
-            from: "The Division Code",
+            from: "Silvia Iurman",
             to: email,
             subject: "test",
             text: "test",
@@ -30,7 +30,7 @@ module.exports = {
 
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: "Silvia Iurman",
                 to: email,
                 subject: "confirma tu cuenta",
                 text: "confirma tu cuenta",
@@ -48,7 +48,7 @@ module.exports = {
         const { name, email, uuid } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: `Silvia Iurman <${process.env.USER_MAIL}>`,
                 to: email,
                 subject: "Reestablecé tu contaseña",
                 text: "reestablecé tu contraseña",
@@ -67,7 +67,7 @@ module.exports = {
         const { name, email, purchase } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: "Silvia Iurman",
                 to: email,
                 subject: "Inscripción exitosa",
                 text: "Inscripción exitosa",
@@ -85,7 +85,7 @@ module.exports = {
         const { email, purchase } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: "Silvia Iurman",
                 to: process.env.MAIL_ADMIN,
                 subject: "Inscripción exitosa",
                 text: "Inscripción exitosa",
@@ -102,7 +102,7 @@ module.exports = {
         const { email, purchase, price } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: "Silvia Iurman",
                 to: email,
                 subject: "Inscripción pendiente",
                 text: "Inscripción pendiente",
@@ -111,9 +111,12 @@ module.exports = {
                     <p>Gracias por tu compra. A continuación, te proporcionamos los detalles para realizar una transferencia bancaria:</p>
                     <ul>
                         <li>Monto: $${price}</li>
+                        <li>BANCO: Galicia</li>
                         <li>CBU: 1234567890123456789012</li>
-                        <li>Titular: Nombre del Titular</li>
-                        <li>CUIT: 12-34567890-1</li>
+                        <li>ALIAS: BOLDO.TAPIZ.ARROZ</li>
+                        <li>CTA: 4005129-2 234-2</li>
+                        <li>Titular: Alejandro Paredes</li>
+                        <li>CUIL: 20164026230</li>
                     </ul>
                     <p>Por favor, realiza la transferencia a la cuenta indicada y asegúrate de incluir tu ID de compra (${purchase}) en el concepto de la transferencia.</p>
                     <p>Una vez que hayamos recibido la transferencia, procesaremos tu inscripción y te enviaremos más detalles.</p>
@@ -129,7 +132,7 @@ module.exports = {
         const { email, purchase, price } = data
         try {
             const infoMail = await transport.sendMail({
-                from: "The Division Code",
+                from: "Silvia Iurman",
                 to: process.env.MAIL_ADMIN,
                 subject: "Inscripción pendiente",
                 text: "Inscripción pendiente",
