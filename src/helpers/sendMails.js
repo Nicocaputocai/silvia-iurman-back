@@ -117,16 +117,19 @@ module.exports = {
                 text: "Inscripción pendiente",
                 html: `
                 <p>Estimado/a ${email},</p>
-                    <p>Gracias por tu compra. A continuación, te proporcionamos los detalles para realizar una transferencia bancaria:</p>
-                    <ul>
-                        <li>Monto: $${price}</li>
-                        <li>CBU: 1234567890123456789012</li>
-                        <li>Titular: Nombre del Titular</li>
-                        <li>CUIT: 12-34567890-1</li>
-                    </ul>
-                    <p>Por favor, realiza la transferencia a la cuenta indicada y asegúrate de incluir tu ID de compra (${purchase}) en el concepto de la transferencia.</p>
-                    <p>Una vez que hayamos recibido la transferencia, procesaremos tu inscripción y te enviaremos más detalles.</p>
-                    <p>¡Gracias por tu atención!</p>
+                <p>Gracias por tu compra. A continuación, te proporcionamos los detalles para realizar una transferencia bancaria:</p>
+                <ul>
+                    <li>Monto: $${price}</li>
+                    <li>BANCO: Galicia</li>
+                    <li>CBU: 1234567890123456789012</li>
+                    <li>ALIAS: BOLDO.TAPIZ.ARROZ</li>
+                    <li>CTA: 4005129-2 234-2</li>
+                    <li>Titular: Alejandro Paredes</li>
+                    <li>CUIL: 20164026230</li>
+                </ul>
+                <p>Por favor, realiza la transferencia a la cuenta indicada y asegúrate de incluir tu ID de compra (${purchase}) en el concepto de la transferencia. Luego, por favor enviar el comprobante de pago a ncfargentina@gmail.com </p>
+                <p>Una vez que hayamos recibido la transferencia, procesaremos tu inscripción y te enviaremos más detalles.</p>
+                <p>¡Gracias por tu atención!</p>
                 `
             })
             console.log(infoMail);
