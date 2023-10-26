@@ -126,13 +126,10 @@ module.exports = {
                     <li>CTA: 4005129-2 234-2</li>
                     <li>Titular: Alejandro Paredes</li>
                     <li>CUIL: 20164026230</li>
+                    <li>Para pago por Paypál:</li>
+                    <li>http://paypal.me/silviaiurman</li>
                 </ul>
-                <p>Para pago por Paypál:</p>
-                <ul>
-                <li>http://paypal.me/silviaiurman</li>
-                
-                </ul>
-                <p>Por favor, realiza la transferencia a la cuenta indicada y asegúrate de incluir tu ID de compra (${purchase}) en el concepto de la transferencia. Luego, por favor enviar el comprobante de pago a ncfargentina@gmail.com </p>
+                <p><b>Por favor, realiza la transferencia a la cuenta indicada y asegúrate de incluir tu ID de compra (${purchase}) en el concepto de la transferencia. Luego, por favor enviar el comprobante de pago a +54 911-3394 0108 </b></p>
                 <p>Una vez que hayamos recibido la transferencia, procesaremos tu inscripción y te enviaremos más detalles.</p>
                 <p>¡Gracias por tu atención!</p>
                 `
