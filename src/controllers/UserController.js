@@ -203,9 +203,9 @@ module.exports = {
             .populate('activity')
             .populate('courses')
             .populate('modules');
-            if(user.avatar != "" && user.avatar != null && user.avatar != 'default_avatar.webp'){
-                deleteFile(user.avatar)
-            }
+            // if(user.avatar != "" && user.avatar != null && user.avatar != 'default_avatar.webp'){
+            //     deleteFile(user.avatar)
+            // }
             user.avatar = req.file.filename;
             await user.save();
             return res.status(200).json({
