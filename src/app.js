@@ -3,7 +3,22 @@ const bodyParser = require('body-parser');
 const App = express();
 const cors = require('cors');
 
-App.use(cors());
+const allowedOrigins = ['https://www.silviaiurman.com', 'http://localhost:3030'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Permitir solicitudes sin origen (como aplicaciones Postman o CURL)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200
+};
+
+App.use(cors(corsOptions));
 
 const Activities = require('./routes/activities');
 const Auth = require('./routes/auth');
