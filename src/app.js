@@ -7,11 +7,12 @@ const allowedOrigins = ['https://www.silviaiurman.com', 'http://localhost:5173']
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Permitir solicitudes sin origen (como aplicaciones Postman o CURL)
+    console.log('Origin:', origin); // Log para verificar el origen
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      console.log('Blocked by CORS:', origin); // Log para ver qué se está bloqueando
       callback(new Error('Not allowed by CORS'));
     }
   },
