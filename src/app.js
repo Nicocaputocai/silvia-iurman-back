@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const App = express();
 const cors = require('cors');
 
-const allowedOrigins = ['https://www.silviaiurman.com', 'http://localhost:3030'];
+const allowedOrigins = ['https://www.silviaiurman.com', 'http://localhost:5173'];
 
 const corsOptions = {
   origin: function (origin, callback) {
