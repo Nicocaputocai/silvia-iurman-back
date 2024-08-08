@@ -37,9 +37,9 @@ module.exports = {
         let idArticle = req.params._id;
         let image = req.files[0] ? req.files[0].filename : req.body.img;
         const article = await Blog.findById(idArticle)
-        if(article.img != image && article.img != ""){
-            deleteFile(article.img)
-        }
+        // if(article.img != image && article.img != ""){
+        //     deleteFile(article.img)
+        // }
         const data ={
             title: req.body.title,
             img: image,
