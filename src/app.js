@@ -3,19 +3,10 @@ const bodyParser = require('body-parser');
 const App = express();
 const cors = require('cors');
 
-const allowedOrigins = ['https://www.silviaiurman.com', 'http://localhost:5173'];
+// const allowedOrigins = ['https://www.silviaiurman.com', 'http://localhost:5173'];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    console.log('Origin:', origin); // Log para verificar el origen
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log('Blocked by CORS:', origin); // Log para ver qué se está bloqueando
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*', // Permite todos los orígenes
   optionsSuccessStatus: 200
 };
 
