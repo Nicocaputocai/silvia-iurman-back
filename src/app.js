@@ -5,6 +5,13 @@ const cors = require('cors');
 
 // const allowedOrigins = ['https://www.silviaiurman.com', 'http://localhost:5173'];
 
+App.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept');
+  res.sendStatus(200);
+});
+
 const corsOptions = {
   origin: '*', // Permite todos los orígenes
   optionsSuccessStatus: 200
