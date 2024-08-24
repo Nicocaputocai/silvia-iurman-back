@@ -4,7 +4,7 @@ const App = express();
 const cors = require('cors');
 
 const corsOptions = {
-  origin: 'https://www.silviaiurman.com', // Especifica el origen permitido
+  origin: 'https://api.silviaiurman.com', // Especifica el origen permitido
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
   allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization'], // Encabezados permitidos
   optionsSuccessStatus: 200, // Código de éxito para opciones preflight
