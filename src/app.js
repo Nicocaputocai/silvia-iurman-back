@@ -4,7 +4,7 @@ const App = express();
 const cors = require('cors');
 
 const corsOptions = {
-  origin: '*', // Especifica el origen permitido
+  origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
   allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization'], // Encabezados permitidos
   optionsSuccessStatus: 200, // Código de éxito para opciones preflight
@@ -13,8 +13,8 @@ const corsOptions = {
 // Usa el middleware CORS con las opciones configuradas
 App.use(cors(corsOptions));
 
-// Manejo de solicitudes OPTIONS (preflight) si es necesario
-App.options('*', cors(corsOptions));
+// // Manejo de solicitudes OPTIONS (preflight) si es necesario
+// App.options('*', cors(corsOptions));
 const Activities = require('./routes/activities');
 const Auth = require('./routes/auth');
 const Blog = require('./routes/blog');
