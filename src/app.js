@@ -10,8 +10,7 @@ const corsOptions = {
   optionsSuccessStatus: 200, // Código de éxito para opciones preflight
 };
 
-
-App.use(cors( "*",corsOptions));
+App.use(cors(corsOptions));
 
 // // Manejo de solicitudes OPTIONS (preflight) si es necesario
 // App.options('*', cors(corsOptions));
