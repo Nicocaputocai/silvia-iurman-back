@@ -3,23 +3,18 @@ const bodyParser = require('body-parser');
 const App = express();
 const cors = require('cors');
 
-// Manejo de solicitudes OPTIONS (preflight)
-App.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization');
-  res.sendStatus(200);
-});
-
-// Configuración de CORS
 const corsOptions = {
-  origin: '*', // Permite todos los orígenes
-  optionsSuccessStatus: 200,
-  allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization'] // Incluye Authorization
+  origin: 'https://www.silviaiurman.com', // Especifica el origen permitido
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
+  allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization'], // Encabezados permitidos
+  optionsSuccessStatus: 200, // Código de éxito para opciones preflight
 };
 
+// Usa el middleware CORS con las opciones configuradas
 App.use(cors(corsOptions));
 
+// Manejo de solicitudes OPTIONS (preflight) si es necesario
+App.options('*', cors(corsOptions));
 const Activities = require('./routes/activities');
 const Auth = require('./routes/auth');
 const Blog = require('./routes/blog');
