@@ -36,5 +36,9 @@ App.use('/api/user', User);
 App.use('/api/checkout', Checkouts);
 App.use('/api/modules', Modules);
 App.use('/api/email', Email);
+App.get('/api/test', (req, res) => {
+  res.send('API funcionando');
+});
+
 
 module.exports = App;

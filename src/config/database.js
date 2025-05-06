@@ -3,14 +3,20 @@ const CONFIG = require('./config');
 mongoose.set('strictQuery', false);
 
 module.exports = {
-    conection: null,
-    connect: function(){
-        if(this.connection) return this.connection;
-        return mongoose.connect(CONFIG.DB)
-        .then(connection =>{
-            this.connection = connection;
-            console.log('Conexión a Mongoose correcta');
-        })
-        .catch (err => console.log(err))
-    }
-}
+  connection: null,
+  connect: function () {
+    if (this.connection) return Promise.resolve(this.connection);
+    return mongoose.connect(CONFIG.DB, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then((conn) => {
+      this.connection = conn;
+      console.log('Conexión a Mongoose correcta');
+      return conn;
+    })
+    .catch((err) => {
+      console.error('Error conectando a MongoDB:', err);
+    });
+  }
+};
