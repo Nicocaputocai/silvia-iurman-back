@@ -1,0 +1,9 @@
+{
+    "app_type": "node",
+    "startup_file": "index.js",
+    "environment": "production",
+    "max_pool_size": 2,
+    "min_instances": 1,
+    "spawn_method": "direct",
+    "load_shell_env_vars": true
+  }
