@@ -47,45 +47,71 @@
 // };
 const mongoose = require('mongoose');
 const CONFIG = require('./config');
+let isConnected = false;
 
-mongoose.set('strictQuery', false);
-
-const connectionState  = {
-  isConnected: false,
-  retryCount: 0
-};
-
-const connectDB = async () => {
-  if (connectionState .isConnected) return true;
-  
-  try {
-    await mongoose.connect(CONFIG.DB, {
-      serverSelectionTimeoutMS: 10000,
-      socketTimeoutMS: 45000
-    });
-    connectionState .isConnected = true;
+const connectWithRetry = () => {
+  console.log('🔁 Intentando conexión a MongoDB...');
+  mongoose.connect(CONFIG.DB, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 30000,
+    connectTimeoutMS: 10000
+  })
+  .then(() => {
+    isConnected = true;
     console.log('✅ MongoDB conectado');
-    return true;
-  } catch (err) {
-    console.error(`❌ Intento ${state.retryCount + 1} fallido`);
-    connectionState .retryCount++;
+    mongoose.connection.on('disconnected', () => {
+      isConnected = false;
+      setTimeout(connectWithRetry, 5000);
+    });
+  })
+  .catch(err => {
+    console.error(`❌ Error (${new Date().toLocaleTimeString()}):`, err.message);
+    setTimeout(connectWithRetry, 5000);
+  });
+};
+
+// Inicia inmediatamente
+connectWithRetry();
+
+// mongoose.set('strictQuery', false);
+// const MONGO_URI = CONFIG.DB
+// const state = {
+//   isConnected: false
+// };
+
+// if (!MONGO_URI) {
+//   console.error('❌ ERROR: Falta cadena de conexión MongoDB');
+//   console.log('Solución:');
+//   console.log('1. Para desarrollo: Crea un archivo .env con DB="tu_cadena"');
+//   console.log('2. Para producción: Configura la variable DB en Plesk');
+//   process.exit(1);
+// }
+
+
+// const connectDB = async () => {
+//   try {
+//     await mongoose.connect(MONGO_URI, {
+//       serverSelectionTimeoutMS: 5000,
+//       socketTimeoutMS: 30000,
+//       connectTimeoutMS: 10000,
+//       maxPoolSize: 10,
+//       retryWrites: true
+//     });
+//     console.log('✅ MongoDB conectado');
     
-    if (connectionState .retryCount < 3) {
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      return connectDB();
-    }
-    return false;
-  }
+//     mongoose.connection.on('disconnected', () => {
+//       console.log('⚠️ MongoDB desconectado. Reconectando...');
+//       setTimeout(connectDB, 5000);
+//     });
+
+//   } catch (err) {
+//     console.error('❌ Error de conexión inicial:', err.message);
+//     console.log('⚠️ Intentando reconexión en 5 segundos...');
+//     setTimeout(connectDB, 5000);
+//   }
+// };
+module.exports = {
+  isConnected: () => isConnected
 };
 
-module.exports = { 
-  connect: connectDB,
-  getStatus: () => connectionState .isConnected
-};
-// Añade este método
-const getStatus = () => connectionState.isConnected;
-
-module.exports = { 
-  connect: connectDB,
-  getStatus // Exporta el método
-};
+// module.exports = connectDB;

@@ -30,12 +30,6 @@ App.use(bodyParser.json());
 App.use(bodyParser.urlencoded({ extended: true }));
 App.use(express.static(__dirname + '/public'));
 
-App.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK',
-    dbState: 'not-connected' 
-  });
-});
 App.use('/api/activities', Activities);
 App.use('/api/auth', Auth);
 App.use('/api/blog', Blog);
@@ -60,16 +54,6 @@ App.get('/api/debug', (req, res) => {
   });
 });
 
-// Middleware para verificar DB en rutas críticas
-App.use((req, res, next) => {
-  if (req.path.startsWith('/api') && !Database.getStatus()) {
-    return res.status(503).json({ 
-      error: 'DB no conectada',
-      routesAvailable: ['/api/test', '/api/health']
-    });
-  }
-  next();
-});
 
 module.exports = App;
 
