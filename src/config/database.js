@@ -48,13 +48,21 @@
 const mongoose = require('mongoose');
 const CONFIG = require('./config');
 let isConnected = false;
+mongoose.set('strictQuery', false);
+mongoose.connection.on('error', err => {
+  console.error('❌ Error de MongoDB (Node 16):', err.message);
+});
+
+
 
 const connectWithRetry = () => {
   console.log('🔁 Intentando conexión a MongoDB...');
   mongoose.connect(CONFIG.DB, {
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 30000,
-    connectTimeoutMS: 10000
+    serverSelectionTimeoutMS: 8000,  // Más tiempo para Node 16
+    socketTimeoutMS: 45000,
+    connectTimeoutMS: 10000,
+    maxPoolSize: 5,                // Pool más pequeño
+    family: 4                       // Fuerza IPv4
   })
   .then(() => {
     isConnected = true;

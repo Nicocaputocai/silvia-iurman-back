@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev":"nodemon",
+    "dev": "nodemon",
     "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Nicocaputocai/silvia-iurman-back.git"
   },
+  "type": "commonjs",
   "author": "The Division Code",
   "license": "ISC",
   "bugs": {
@@ -29,11 +30,12 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.0",
     "mercadopago": "^1.5.15",
-    "mongoose": "^6.8.3",
+    "mongoose": "6.13",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.2",
     "nodemon": "^2.0.20",
     "sharp": "^0.32.1"
   }
+  
 }

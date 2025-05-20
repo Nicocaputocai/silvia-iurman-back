@@ -23,49 +23,101 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 const CONFIG = require('./src/config/config');
 const App = require('./src/app');
 require('dotenv/config');
 
-// 1. Configuración inicial de Passenger
+// 1. Configuración del sistema de logs
+const logsDir = path.join(__dirname, 'tmp/logs');
+const logFile = path.join(logsDir, 'app.log');
+
+// Crear directorio de logs si no existe
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
+
+// Función para escribir logs
+const log = (message, level = 'INFO') => {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] [${level}] ${message}\n`;
+  
+  fs.appendFile(logFile, logMessage, (err) => {
+    if (err) console.error('❌ Error escribiendo log:', err);
+  });
+
+  // Mostrar también en consola
+  console[level === 'ERROR' ? 'error' : 'log'](logMessage.trim());
+};
+
+// 2. Configuración de Passenger
 if (typeof PhusionPassenger !== 'undefined') {
   PhusionPassenger.configure({ autoInstall: false });
+  log('Configuración de Passenger completada');
 }
-const MONGO_URI =  process.env.DB || `mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.wug6n.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`
+
+// 3. Conexión a MongoDB con logging
+const MONGO_URI = process.env.DB || `mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.wug6n.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
 
 mongoose.connect(MONGO_URI, {
   serverSelectionTimeoutMS: 10000,
   socketTimeoutMS: 30000,
   connectTimeoutMS: 10000,
-  waitQueueTimeoutMS: 10000, // Nuevo parámetro clave
+  waitQueueTimeoutMS: 10000,
   retryWrites: true,
   w: 'majority'
 })
-.then(() => console.log('✅ MongoDB conectado (Método Passenger)'))
-.catch(err => console.error('❌ Error MongoDB (No crítico):', err.message));
-// 3. Ruta de verificación de salud
+.then(() => log('✅ MongoDB conectado (Método Passenger)'))
+.catch(err => {
+  log(`❌ Error MongoDB: ${err.message}`, 'ERROR');
+});
+
+// 4. Middleware de logging para solicitudes
+App.use((req, res, next) => {
+  const dbState = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  
+  log(`Solicitud: ${req.method} ${req.url} | DB: ${dbState}`);
+  
+  if (dbState === 'disconnected') {
+    log(`⚠️ Solicitud recibida sin conexión a DB: ${req.url}`, 'WARN');
+  }
+  
+  next();
+});
+
+// 5. Ruta de verificación de salud con logging
 App.get('/api/health', (req, res) => {
+  const dbState = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  log(`Health check | DB: ${dbState}`);
+  
   res.json({
     status: 'OK',
-    dbState: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    dbState,
+    timestamp: new Date().toISOString()
   });
 });
 
-// 3. Inicio condicional del servidor
+// 6. Inicio del servidor con logging
 if (typeof PhusionPassenger !== 'undefined') {
-  App.listen('passenger');
-  console.log('🛫 Modo Passenger activado');
+  App.listen('passenger', () => {
+    log('🛫 Servidor iniciado en modo Passenger');
+  });
 } else {
-  App.listen(4000);
-  console.log('🚀 Servidor local en puerto 4000');
+  const PORT = process.env.PORT || 4000;
+  App.listen(PORT, () => {
+    log(`🚀 Servidor local en puerto ${PORT}`);
+  });
 }
 
-// 4. Middleware de verificación
-App.use((req, res, next) => {
-  if (mongoose.connection.readyState !== 1) {
-    console.warn('⚠️ Solicitud recibida sin conexión a DB');
-  }
-  next();
+// 7. Manejo de errores no capturados
+process.on('uncaughtException', (err) => {
+  log(`💥 Error no capturado: ${err.stack}`, 'ERROR');
 });
-// 4. Exportación para Passenger
+
+process.on('unhandledRejection', (reason) => {
+  log(`⚠️ Promise rechazada: ${reason}`, 'ERROR');
+});
+
+// 8. Exportación para Passenger
 module.exports = App;
